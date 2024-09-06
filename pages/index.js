@@ -6,6 +6,7 @@ import FavoritesList from "../components/FavoritesList";
 import Image from "next/image";
 import "../src/app/globals.css";
 import bg2 from "../public/bg3.jpg";
+import Navbar from "../components/Navbar";
 
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -37,18 +38,19 @@ export default function Home() {
           className="opacity-50"
         />
       </div> */}
+       <Navbar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
       <div className="container mx-auto px-4 py-8 relative z-10">
         <h1 className="text-5xl font-bold text-center my-8 text-gray-200 tracking-wide">
           Welcome to the World of SuperHeroes
         </h1>
         {isLoggedIn ? (
           <div className="space-y-8">
-            <button
+            {/* <button
               className="px-6 py-3 bg-red-600 hover:bg-red-700 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-1"
               onClick={handleLogout}
             >
               Logout
-            </button>
+            </button> */}
             <SuperheroList />
             <FavoritesList />
             <TeamRecommendation />
