@@ -7,7 +7,8 @@ const SuperheroList = () => {
   useEffect(() => {
     const fetchSuperheroes = async () => {
       const response = await axios.get('/api/superheroes');
-      setSuperheroes(response.data);
+      if (response.data)
+        setSuperheroes(response.data);
     };
     fetchSuperheroes();
   }, []);

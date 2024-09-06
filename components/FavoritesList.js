@@ -38,7 +38,7 @@ const FavoritesList = () => {
           {favorites.map((favorite) => (
             <li key={favorite.id}>
               <Link href={`/superhero/${favorite.superhero.id}`}>
-                <a>{favorite.superhero.name}</a>
+                <div>{favorite.superhero.name}</div>
               </Link>
             </li>
           ))}

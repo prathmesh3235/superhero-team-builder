@@ -32,7 +32,7 @@ const TeamRecommendation = () => {
         {team.map((hero) => (
           <li key={hero.id}>
             <Link href={`/superhero/${hero.id}`}>
-              <a>{hero.name} ({hero.alignment})</a>
+              <div>{hero.name} ({hero.alignment})</div>
             </Link>
           </li>
         ))}
