@@ -26,7 +26,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white relative">
-      <div className="absolute inset-0">
+      {/* <div className="absolute inset-0">
         <Image
           src={bg2}
           layout="fill"
@@ -36,10 +36,10 @@ export default function Home() {
           priority
           className="opacity-50"
         />
-      </div>
+      </div> */}
       <div className="container mx-auto px-4 py-8 relative z-10">
-        <h1 className="text-5xl font-bold text-center my-8 text-blue-300 tracking-wide">
-          Superhero Team Builder
+        <h1 className="text-5xl font-bold text-center my-8 text-gray-200 tracking-wide">
+          Welcome to the World of SuperHeroes
         </h1>
         {isLoggedIn ? (
           <div className="space-y-8">
@@ -49,9 +49,9 @@ export default function Home() {
             >
               Logout
             </button>
+            <SuperheroList />
             <FavoritesList />
             <TeamRecommendation />
-            <SuperheroList />
           </div>
         ) : (
           <div className="flex justify-center items-center h-full mt-16">
