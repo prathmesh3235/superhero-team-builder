@@ -102,16 +102,39 @@ const Pagination = ({ heroesPerPage, totalHeroes, currentPage, paginate }) => {
 };
 
 const Modal = ({ hero, onClose }) => {
-  const [isFavorite, setIsFavorite] = useState(false);  // State to track favorite status
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [notification, setNotification] = useState('');
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [notificationColor, setNotificationColor] = useState('text-green-500');
+
+
+  useEffect(() => {
+    checkFavorite();
+  }, [hero.id]);
+
+  const checkFavorite = async () => {
+    const token = localStorage.getItem('token');
+    const headers = { Authorization: `Bearer ${token}` };
+    try {
+      const response = await axios.get(`/api/favorites?superheroId=${hero.id}`, { headers });
+      setIsFavorite(response.data.some(fav => fav.superheroId === hero.id));
+    } catch (error) {
+      console.error('Error checking favorite status:', error);
+    }
+  };
 
   const handleFavoriteToggle = async () => {
     const token = localStorage.getItem('token');
     const url = `/api/favorites`;
     const headers = { Authorization: `Bearer ${token}` };
+
     if (!isFavorite) {
       try {
         await axios.post(url, { superheroId: hero.id }, { headers });
         setIsFavorite(true);
+        setNotification('Added to Favorites');
+        setNotificationColor('text-green-500');
+        setTimeout(() => setNotification(''), 3000);
       } catch (error) {
         console.error('Error adding to favorites:', error);
       }
@@ -119,6 +142,9 @@ const Modal = ({ hero, onClose }) => {
       try {
         await axios.delete(`${url}?superheroId=${hero.id}`, { headers });
         setIsFavorite(false);
+        setNotification('Removed from Favorites');
+        setNotificationColor('text-red-500');
+        setTimeout(() => setNotification(''), 3000);
       } catch (error) {
         console.error('Error removing from favorites:', error);
       }
@@ -133,15 +159,26 @@ const Modal = ({ hero, onClose }) => {
           <div className="md:ml-6 mt-4 md:mt-0 md:w-2/3">
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold text-white">{hero.fullName || hero.name}</h2>
-              <button onClick={handleFavoriteToggle} className="text-yellow-400 hover:text-yellow-500 text-3xl">
-                {isFavorite ? <IoStar /> : <IoStarOutline />}
-              </button>
+              <div onMouseEnter={() => setShowTooltip(true)} onMouseLeave={() => setShowTooltip(false)} className="relative">
+                <button 
+                  onClick={handleFavoriteToggle} 
+                  className="text-yellow-400 hover:text-yellow-500 text-3xl"
+                >
+                  {isFavorite ? <IoStar /> : <IoStarOutline />}
+                </button>
+                {showTooltip && (
+                  <span className="absolute -mt-10 text-center w-32 px-2 py-1 bg-black text-white rounded shadow-lg z-50">
+                    {isFavorite ? "Remove from Favourites" : "Add to Favourites"}
+                  </span>
+                )}
+              </div>
             </div>
             <ul className="list-disc pl-5 text-white space-y-2">
               {['intelligence', 'strength', 'speed', 'durability', 'power', 'combat', 'alignment'].map((attr) => (
                 <li key={attr}><strong>{attr.charAt(0).toUpperCase() + attr.slice(1)}:</strong> {hero[attr]}</li>
               ))}
             </ul>
+            {notification && <div className={`text-center py-2 my-2 text-lg ${notificationColor}`}>{notification}</div>}
             <button onClick={onClose} className="mt-4 py-2 px-4 bg-red-500 text-white rounded hover:bg-red-700 transition-colors duration-300 ease-in-out">Close</button>
           </div>
         </div>
@@ -149,5 +186,4 @@ const Modal = ({ hero, onClose }) => {
     </div>
   );
 };
-
 export default SuperheroList;
