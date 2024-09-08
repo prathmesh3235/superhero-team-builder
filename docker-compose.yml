@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  app:
+    build:
+      context: .
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/app
+    environment:
+      - NODE_ENV=development
+      - JWT_SECRET=550e8400-e29b-41d4-a716-446655440000

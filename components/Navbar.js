@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 
-const Navbar = ({ isLoggedIn, onLogout }) => {
+const Navbar = ({ isLoggedIn, onLogout, onLogin }) => {
   return (
     <nav className="bg-gray-800 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -32,10 +32,10 @@ const Navbar = ({ isLoggedIn, onLogout }) => {
                 >
                   Logout
                 </button>
-              ) : (
-                <Link href="/login" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out">
+              ) :(
+                <button onClick={onLogin} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out">
                   Login
-                </Link>
+                </button>
               )}
             </div>
           </div>

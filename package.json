@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "build:css": "tailwindcss build src/app/globals.css -o public/tailwind.css",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate deploy",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

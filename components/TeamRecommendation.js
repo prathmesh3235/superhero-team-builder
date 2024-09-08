@@ -22,17 +22,21 @@ const TeamRecommendation = () => {
     fetchRecommendation();
   }, []);
 
-  if (loading) return <div>Loading team recommendation...</div>;
-  if (error) return <div>{error}</div>;
+  if (loading) return <div className="text-center text-white">Loading team recommendation...</div>;
+  if (error) return <div className="text-center text-red-500">{error}</div>;
 
   return (
-    <div>
-      <h2>Recommended Team</h2>
+    <div className="p-6 max-w-4xl mx-auto bg-gray-800 bg-opacity-70 rounded-xl shadow-2xl backdrop-filter backdrop-blur-lg border border-gray-700">
+      <h2 className="text-3xl font-bold text-center text-white mb-4">Recommended Team</h2>
       <ul>
         {team.map((hero) => (
-          <li key={hero.id}>
-            <Link href={`/superhero/${hero.id}`}>
-              <div>{hero.name} ({hero.alignment})</div>
+          <li key={hero.id} className="my-2">
+            <Link href={`/superhero/${hero.id}`}
+            className="block p-3 rounded-lg bg-gray-700 bg-opacity-60 hover:bg-opacity-70 transition duration-300 ease-in-out transform hover:scale-105">
+                <div className="text-white text-lg font-semibold">
+                  {hero.name} <span className="text-sm text-gray-400">({hero.alignment})</span>
+                </div>
+              
             </Link>
           </li>
         ))}
