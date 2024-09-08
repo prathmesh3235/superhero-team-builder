@@ -8,6 +8,10 @@ RUN npm install
 
 COPY . .
 
+RUN chgrp -R 0 /app && chmod -R g=u /app
+
+USER 1001
+
 EXPOSE 3000
 
 RUN npx prisma generate
