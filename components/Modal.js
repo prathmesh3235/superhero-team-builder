@@ -1,10 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { IoStarOutline, IoStar } from 'react-icons/io5';
+import axios from 'axios';
 
-const Modal = ({ hero, onClose, isFavorite, onToggleFavorite }) => {
+const Modal = ({ hero, onClose }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [notification, setNotification] = useState('');
   const [notificationColor, setNotificationColor] = useState('');
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  useEffect(() => {
+    checkFavorite();
+  }, [hero.id]);
+
+  const checkFavorite = async () => {
+    const token = localStorage.getItem('token');
+    const headers = { Authorization: `Bearer ${token}` };
+    try {
+      const response = await axios.get(`/api/favorites?superheroId=${hero.id}`, { headers });
+      setIsFavorite(response.data.some(fav => fav.superheroId === hero.id));
+    } catch (error) {
+      console.error('Error checking favorite status:', error);
+    }
+  };
 
   // Trigger notification with timeout
   const triggerNotification = (message, color) => {
@@ -13,13 +30,33 @@ const Modal = ({ hero, onClose, isFavorite, onToggleFavorite }) => {
     setTimeout(() => setNotification(''), 3000);
   };
 
-  const handleToggleFavorite = () => {
-    const newFavoriteStatus = !isFavorite;
-    onToggleFavorite(newFavoriteStatus);
-    triggerNotification(
-      newFavoriteStatus ? 'Added to Favorites' : 'Removed from Favorites',
-      newFavoriteStatus ? 'text-green-500' : 'text-red-500'
-    );
+
+  const handleToggleFavorite = async () => {
+    const token = localStorage.getItem('token');
+    const headers = { Authorization: `Bearer ${token}` };
+    const url = `/api/favorites`;
+    const newFavoriteStatus = !isFavorite; // Corrected logic based on the current hero's favorite status
+
+    try {
+        if (newFavoriteStatus) {
+            // Adding to favorites
+            await axios.post(url, { superheroId: hero.id }, { headers });
+            setIsFavorite(true); // Update favorite status optimistically
+            triggerNotification('Added to Favorites', 'text-green-500');
+        } else {
+            // Removing from favorites
+            await axios.delete(`${url}?superheroId=${hero.id}`, { headers });
+            setIsFavorite(false); // Update favorite status optimistically
+            triggerNotification('Removed from Favorites', 'text-red-500');
+        }
+    } catch (error) {
+        console.error(newFavoriteStatus ? 'Error adding to favorites:' : 'Error removing from favorites:', error);
+        // Optionally handle failed updates, e.g., revert optimistic updates or show error messages
+        setIsFavorite(hero.isFavorite); // Revert to original state in case of error
+        triggerNotification('Failed to update favorites', 'text-red-500');
+    }
+
+    setTimeout(() => setNotification(''), 3000); // Clear notification after a delay
   };
 
   if (!hero) return null;

@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
-import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io'; // Importing arrow icons for pagination
-import { IoStarOutline, IoStar } from 'react-icons/io5';
+import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
+import Modal from './Modal'; // Assuming Modal is now a separate component
+import Pagination from './Pagination'; // Assuming Pagination is separated if needed, or kept within this file if not
+import SuperheroCard from './SuperheroCard';
+
 const SuperheroList = () => {
   const [superheroes, setSuperheroes] = useState([]);
   const [filteredHeroes, setFilteredHeroes] = useState([]);
@@ -58,12 +61,13 @@ const SuperheroList = () => {
               className="cursor-pointer"
               onClick={() => setSelectedHero(hero)}
             >
-              <div className="max-w-sm rounded overflow-hidden shadow-lg">
+              {/* <div className="max-w-sm rounded overflow-hidden shadow-lg">
                 <img className="w-full h-48 object-cover" src={hero.image} alt={hero.name} />
                 <div className="px-6 py-4">
                   <div className="font-bold text-xl mb-2">{hero.name}</div>
                 </div>
-              </div>
+              </div> */}
+              <SuperheroCard hero={hero}/>
             </motion.li>
           ))}
         </ul>
@@ -88,104 +92,4 @@ const SuperheroList = () => {
   );
 };
 
-const Pagination = ({ heroesPerPage, totalHeroes, currentPage, paginate }) => {
-  const totalPages = Math.ceil(totalHeroes / heroesPerPage);
-  return (
-    <div className='flex justify-center space-x-2 mt-8'>
-      {Array.from({ length: totalPages }, (_, i) => i + 1).map(number => (
-        <li key={number} className='cursor-pointer text-blue-500'>
-          <a onClick={() => paginate(number)}>{number}</a>
-        </li>
-      ))}
-    </div>
-  );
-};
-
-const Modal = ({ hero, onClose }) => {
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [notification, setNotification] = useState('');
-  const [showTooltip, setShowTooltip] = useState(false);
-  const [notificationColor, setNotificationColor] = useState('text-green-500');
-
-
-  useEffect(() => {
-    checkFavorite();
-  }, [hero.id]);
-
-  const checkFavorite = async () => {
-    const token = localStorage.getItem('token');
-    const headers = { Authorization: `Bearer ${token}` };
-    try {
-      const response = await axios.get(`/api/favorites?superheroId=${hero.id}`, { headers });
-      setIsFavorite(response.data.some(fav => fav.superheroId === hero.id));
-    } catch (error) {
-      console.error('Error checking favorite status:', error);
-    }
-  };
-
-  const handleFavoriteToggle = async () => {
-    const token = localStorage.getItem('token');
-    const url = `/api/favorites`;
-    const headers = { Authorization: `Bearer ${token}` };
-
-    if (!isFavorite) {
-      try {
-        await axios.post(url, { superheroId: hero.id }, { headers });
-        setIsFavorite(true);
-        setNotification('Added to Favorites');
-        setNotificationColor('text-green-500');
-        setTimeout(() => setNotification(''), 3000);
-      } catch (error) {
-        console.error('Error adding to favorites:', error);
-      }
-    } else {
-      try {
-        await axios.delete(`${url}?superheroId=${hero.id}`, { headers });
-        setIsFavorite(false);
-        setNotification('Removed from Favorites');
-        setNotificationColor('text-red-500');
-        setTimeout(() => setNotification(''), 3000);
-      } catch (error) {
-        console.error('Error removing from favorites:', error);
-      }
-    }
-  };
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center p-4">
-      <div className="bg-gray-800 p-6 rounded-lg shadow-xl md:max-w-xl w-full">
-        <div className="flex flex-col md:flex-row">
-          <div className="superheroCard">
-            <img src={hero.image} alt={hero.name} className="md:w-1/2 w-full h-auto object-cover rounded"/>
-            <div className="md:ml-6 mt-4 md:mt-0 md:w-2/3">
-              <div className="flex justify-between items-center">
-                <h2 className="text-2xl font-bold text-white">{hero.fullName || hero.name}</h2>
-                <div onMouseEnter={() => setShowTooltip(true)} onMouseLeave={() => setShowTooltip(false)} className="relative">
-                  <button 
-                    onClick={handleFavoriteToggle} 
-                    className="text-yellow-400 hover:text-yellow-500 text-3xl"
-                  >
-                    {isFavorite ? <IoStar /> : <IoStarOutline />}
-                  </button>
-                  {showTooltip && (
-                    <span className="absolute -mt-10 text-center w-32 px-2 py-1 bg-black text-white rounded shadow-lg z-50">
-                      {isFavorite ? "Remove from Favourites" : "Add to Favourites"}
-                    </span>
-                  )}
-                </div>
-              </div>
-              <ul className="list-disc pl-5 text-white space-y-2">
-                {['intelligence', 'strength', 'speed', 'durability', 'power', 'combat', 'alignment'].map((attr) => (
-                  <li key={attr}><strong>{attr.charAt(0).toUpperCase() + attr.slice(1)}:</strong> {hero[attr]}</li>
-                ))}
-              </ul>
-              {notification && <div className={`text-center py-2 my-2 text-lg ${notificationColor}`}>{notification}</div>}
-              <button onClick={onClose} className="mt-4 py-2 px-4 bg-red-500 text-white rounded hover:bg-red-700 transition-colors duration-300 ease-in-out">Close</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
 export default SuperheroList;
