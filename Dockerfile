@@ -8,7 +8,7 @@ RUN npm install
 
 COPY . .
 
-RUN chgrp -R 0 /app && chmod -R g=u /app
+RUN chgrp -R 0 /app && chmod -R g=u /app && chmod -R 777 /app/.next
 
 USER 1001
 
