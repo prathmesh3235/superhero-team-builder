@@ -1,27 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { IoStarOutline, IoStar } from 'react-icons/io5';
-import axios from 'axios';
+import axios from '../axios/axiosInstance';
+import { useFavorites } from '../context/FavoritesContext';
 
 const Modal = ({ hero, onClose }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [notification, setNotification] = useState('');
   const [notificationColor, setNotificationColor] = useState('');
-  const [isFavorite, setIsFavorite] = useState(false);
+  const { favorites, addFavorite, removeFavorite } = useFavorites();
+  const isFavorite = favorites.some(fav => fav.id === hero.id);
 
-  useEffect(() => {
-    checkFavorite();
-  }, [hero.id]);
-
-  const checkFavorite = async () => {
-    const token = localStorage.getItem('token');
-    const headers = { Authorization: `Bearer ${token}` };
-    try {
-      const response = await axios.get(`/api/favorites?superheroId=${hero.id}`, { headers });
-      setIsFavorite(response.data.some(fav => fav.superheroId === hero.id));
-    } catch (error) {
-      console.error('Error checking favorite status:', error);
-    }
-  };
 
   const triggerNotification = (message, color) => {
     setNotification(message);
@@ -30,25 +18,16 @@ const Modal = ({ hero, onClose }) => {
   };
 
   const handleToggleFavorite = async () => {
-    const token = localStorage.getItem('token');
-    const headers = { Authorization: `Bearer ${token}` };
-    const url = `/api/favorites`;
-    const newFavoriteStatus = !isFavorite;
-
     try {
-        if (newFavoriteStatus) {
-            await axios.post(url, { superheroId: hero.id }, { headers });
-            setIsFavorite(true);
-            triggerNotification('Added to Favorites', 'text-green-500');
-        } else {
-            await axios.delete(`${url}?superheroId=${hero.id}`, { headers });
-            setIsFavorite(false);
-            triggerNotification('Removed from Favorites', 'text-red-500');
-        }
+      if (isFavorite) {
+        await removeFavorite(hero.id);
+        triggerNotification('Removed from Favorites', 'text-red-500');
+      } else {
+        await addFavorite(hero);
+        triggerNotification('Added to Favorites', 'text-green-500');
+      }
     } catch (error) {
-        console.error(newFavoriteStatus ? 'Error adding to favorites:' : 'Error removing from favorites:', error);
-        setIsFavorite(hero.isFavorite);
-        triggerNotification('Failed to update favorites', 'text-red-500');
+      triggerNotification('Failed to update favorites', 'text-red-500');
     }
   };
 

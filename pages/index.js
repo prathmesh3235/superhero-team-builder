@@ -1,40 +1,36 @@
+// pages/index.js
 import React, { useState, useEffect } from "react";
-import SuperheroLandingPage from "../components/SuperHeroLandingPage";
 import SuperheroList from "../components/SuperheroList";
 import TeamRecommendation from "../components/TeamRecommendation";
 import FavoritesList from "../components/FavoritesList";
 import Navbar from "../components/Navbar";
 import "../src/app/globals.css";
-import AuthForm from "../components/AuthForm";
 import Footer from "../components/Footer";
+import { FavoritesProvider } from "../context/FavoritesContext";
+import { useRouter } from 'next/router';
 
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [showLogin, setShowLogin] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
+    if (!token) {
+      router.push('/login');  // Redirect to login page if no token found
+    }
   }, []);
-
-  const handleLogin = () => {
-    setIsLoggedIn(true);
-  };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     setIsLoggedIn(false);
+    router.push('/login');
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white relative scroll-smooth">
-      <Navbar
-        isLoggedIn={isLoggedIn}
-        onLogout={handleLogout}
-        onLogin={() => setShowLogin(true)}
-      />
-      {showLogin && <AuthForm onLogin={handleLogin} />}{" "}
-      {isLoggedIn ? (
+    <FavoritesProvider>
+      <div className="min-h-screen bg-gray-900 text-white relative scroll-smooth">
+        <Navbar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
         <div className="container mx-auto px-4 py-8 relative z-10">
           <h1 className="text-5xl font-bold text-center my-8 text-gray-200 tracking-wide">
             Welcome to the World of SuperHeroes
@@ -59,10 +55,8 @@ export default function Home() {
             </div>{" "}
           </div>
         </div>
-      ) : (
-        <SuperheroLandingPage onLogin={handleLogin} />
-      )}
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </FavoritesProvider>
   );
 }

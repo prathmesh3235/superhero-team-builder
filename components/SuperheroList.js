@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../axios/axiosInstance';
 import { motion, AnimatePresence } from 'framer-motion';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import Modal from './Modal'; 
@@ -15,7 +15,7 @@ const SuperheroList = () => {
 
   useEffect(() => {
     const fetchSuperheroes = async () => {
-      const response = await axios.get('/api/superheroes');
+      const response = await axios.get('/superheroes');
       if (response.data) {
         setSuperheroes(response.data);
         setFilteredHeroes(response.data);

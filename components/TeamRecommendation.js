@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
+import axios from '../axios/axiosInstance';
 import { motion, useAnimation } from 'framer-motion';
 import TeamCard from './TeamCard';
 import BattleResult from './BattleResult';
@@ -21,7 +21,7 @@ const TeamBattleSimulator = () => {
   useEffect(() => {
     const fetchHeroes = async () => {
       try {
-        const response = await axios.get('/api/superheroes');
+        const response = await axios.get('/superheroes');
         setHeroes(response.data);
         setLoading(false);
       } catch (error) {

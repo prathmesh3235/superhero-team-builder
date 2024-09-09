@@ -1,39 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../axios/axiosInstance';
 import Modal from './Modal';
 import SuperheroCard from './SuperheroCard';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useFavorites } from '../context/FavoritesContext';
 
 const FavoritesList = () => {
-  const [favorites, setFavorites] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const { favorites } = useFavorites();
   const [selectedHero, setSelectedHero] = useState(null);
-  const [notification, setNotification] = useState('');
 
-  useEffect(() => {
-    fetchFavorites();
-  }, []);
-
-  const fetchFavorites = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const headers = { Authorization: `Bearer ${token}` };
-      const response = await axios.get('/api/favorites', { headers });
-      setFavorites(response.data.map(fav => ({ ...fav.superhero, isFavorite: true })));
-      setLoading(false);
-    } catch (err) {
-      setError('Failed to fetch favorites');
-      setLoading(false);
-    }
-  };
 
   const closeModal = () => {
     setSelectedHero(null);
   };
-
-  if (loading) return <div className="text-center text-white mt-4">Loading favorites...</div>;
-  if (error) return <div className="text-center text-red-500 mt-4">{error}</div>;
 
   return (
     <div className="p-4">

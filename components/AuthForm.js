@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios from '../axios/axiosInstance';
+import { useRouter } from "next/router";
 
-const AuthForm = ({ onLogin }) => {
+const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState(''); 
+  const router = useRouter();
 
   const clearSuccessMessage = () => {
     setTimeout(() => {
@@ -20,7 +22,7 @@ const AuthForm = ({ onLogin }) => {
     setSuccessMessage('');
 
     try {
-      const response = await axios.post('/api/auth', {
+      const response = await axios.post('/auth', {
         action: isLogin ? 'login' : 'register',
         username,
         password,
@@ -32,7 +34,7 @@ const AuthForm = ({ onLogin }) => {
         clearSuccessMessage();
         
         setTimeout(() => {
-          onLogin();
+          router.push("/"); // Redirect to the home page after login
         }, 1000);
       } else {
         setIsLogin(true);

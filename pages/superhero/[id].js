@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import axios from '../../axios/axiosInstance'
 
 export default function SuperheroDetail() {
   const router = useRouter()
@@ -11,7 +11,7 @@ export default function SuperheroDetail() {
   useEffect(() => {
     if (id) {
       const fetchSuperhero = async () => {
-        const response = await axios.get(`/api/superheroes/${id}`)
+        const response = await axios.get(`/superheroes/${id}`)
         setSuperhero(response.data)
       }
       fetchSuperhero()
@@ -22,7 +22,7 @@ export default function SuperheroDetail() {
   const checkFavoriteStatus = async () => {
     try {
       const token = localStorage.getItem('token')
-      const response = await axios.get('/api/favorites', {
+      const response = await axios.get('/favorites', {
         headers: { Authorization: `Bearer ${token}` }
       })
       setIsFavorite(response.data.some(fav => fav.superheroId === parseInt(id)))
@@ -35,11 +35,11 @@ export default function SuperheroDetail() {
     try {
       const token = localStorage.getItem('token')
       if (isFavorite) {
-        await axios.delete(`/api/favorites?superheroId=${id}`, {
+        await axios.delete(`/favorites?superheroId=${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         })
       } else {
-        await axios.post('/api/favorites', { superheroId: parseInt(id) }, {
+        await axios.post('/favorites', { superheroId: parseInt(id) }, {
           headers: { Authorization: `Bearer ${token}` }
         })
       }
