@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { motion } from 'framer-motion';
+import { motion, useAnimation } from 'framer-motion';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { Shield, Zap, Brain } from 'lucide-react';
 
@@ -105,6 +105,10 @@ const TeamBattleSimulator = () => {
   const [teamB, setTeamB] = useState([]);
   const [comparisonResult, setComparisonResult] = useState(null);
   const [loading, setLoading] = useState(true);
+  const compareButtonRef = useRef(null);
+  const resultContainerRef = useRef(null);
+  const containerRef = useRef(null);
+  const controls = useAnimation();
 
   useEffect(() => {
     const fetchHeroes = async () => {
@@ -120,6 +124,24 @@ const TeamBattleSimulator = () => {
 
     fetchHeroes();
   }, []);
+
+  useEffect(() => {
+    if (teamA.length > 0 && compareButtonRef.current) {
+      compareButtonRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [teamA]);
+
+  useEffect(() => {
+    if (teamB.length > 0 && compareButtonRef.current) {
+      compareButtonRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [teamB]);
+
+  useEffect(() => {
+    if (comparisonResult && resultContainerRef.current) {
+      resultContainerRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [comparisonResult]);
 
   const getTeam = (criteria) => {
     let selectedHeroes;
@@ -190,12 +212,31 @@ const TeamBattleSimulator = () => {
     setComparisonResult({ winner, reason, statsA, statsB });
   };
 
+  const handleTeamASelect = (type) => {
+    setTeamA(getTeam(type));
+  };
+
+  const handleTeamBSelect = (type) => {
+    setTeamB(getTeam(type));
+  };
+
   if (loading) {
-    return <div className="text-center text-white text-2xl">Loading heroes...</div>;
+    return (
+      <div className="text-center text-white text-2xl py-20">
+        <motion.div 
+          className="inline-block"
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1, loop: Infinity }}
+        >
+          <span className="inline-block w-8 h-8 border-4 border-white rounded-full border-t-transparent animate-spin"></span>
+        </motion.div>
+        <p className="mt-4">Loading heroes...</p>
+      </div>
+    );
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-6 bg-gray-900 rounded-xl shadow-2xl">
+    <div ref={containerRef} className="max-w-6xl mx-auto p-6 bg-gray-900 rounded-xl shadow-2xl">
       <motion.h1 
         className="text-4xl font-bold text-center text-white mb-8"
         initial={{ opacity: 0, y: -20 }}
@@ -205,10 +246,11 @@ const TeamBattleSimulator = () => {
         Team Battle Simulator
       </motion.h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        <TeamCard team={teamA} type="A" onSelect={(type) => setTeamA(getTeam(type))} />
-        <TeamCard team={teamB} type="B" onSelect={(type) => setTeamB(getTeam(type))} />
+        <TeamCard team={teamA} type="A" onSelect={handleTeamASelect} />
+        <TeamCard team={teamB} type="B" onSelect={handleTeamBSelect} />
       </div>
       <motion.button
+        ref={compareButtonRef}
         className="w-full bg-blue-600 text-white py-3 rounded-lg font-bold text-lg hover:bg-blue-700 transition duration-300"
         onClick={compareTeams}
         disabled={teamA.length === 0 || teamB.length === 0}
@@ -217,7 +259,9 @@ const TeamBattleSimulator = () => {
       >
         Compare Teams
       </motion.button>
-      {comparisonResult && <BattleResult result={comparisonResult} />}
+      <div ref={resultContainerRef} className="mt-8">
+        {comparisonResult && <BattleResult result={comparisonResult} />}
+      </div>
     </div>
   );
 };

@@ -26,7 +26,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white relative">
+    <div className="min-h-screen bg-gray-900 text-white relative scroll-smooth">
       <Navbar
         isLoggedIn={isLoggedIn}
         onLogout={handleLogout}
@@ -40,8 +40,12 @@ export default function Home() {
           </h1>
           <div className="space-y-8">
             <SuperheroList />
-            <FavoritesList />
-            <TeamRecommendation />
+            <div id="favorites-section">
+              <FavoritesList />
+            </div>{" "}
+            <div id="TeamBattle-section">
+              <TeamRecommendation />
+            </div>{" "}
           </div>
         </div>
       ) : (

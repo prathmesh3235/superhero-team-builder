@@ -6,24 +6,40 @@ const AuthForm = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState(''); 
+
+  const clearSuccessMessage = () => {
+    setTimeout(() => {
+      setSuccessMessage('');
+    }, 3000);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    
+    setSuccessMessage('');
+
     try {
       const response = await axios.post('/api/auth', {
         action: isLogin ? 'login' : 'register',
         username,
-        password
+        password,
       });
+
       if (isLogin) {
         localStorage.setItem('token', response.data.token);
-        onLogin();
+        setSuccessMessage('Login successful!');
+        clearSuccessMessage();
+        
+        setTimeout(() => {
+          onLogin();
+        }, 1000);
       } else {
         setIsLogin(true);
         setUsername('');
         setPassword('');
+        setSuccessMessage('User created successfully! Please log in.');
+        clearSuccessMessage();
       }
     } catch (error) {
       console.error('Error during form submission:', error);
@@ -35,6 +51,7 @@ const AuthForm = ({ onLogin }) => {
     <form onSubmit={handleSubmit} className="bg-gray-800 bg-opacity-80 p-8 rounded-xl shadow-2xl max-w-md mx-auto backdrop-filter backdrop-blur-lg">
       <h2 className="text-2xl font-bold text-blue-300 mb-6">{isLogin ? 'Login to Enter' : 'Register'}</h2>
       {error && <p className="bg-red-500 text-white p-3 rounded-lg mb-4">{error}</p>}
+      {successMessage && <p className="bg-green-500 text-white p-3 rounded-lg mb-4">{successMessage}</p>} 
       <div className="mb-4">
         <input
           type="text"

@@ -1,7 +1,18 @@
-import React from 'react';
 import Link from 'next/link';
 
 const Navbar = ({ isLoggedIn, onLogout, onLogin }) => {
+  const scrollToFavorites = () => {
+    const element = document.getElementById('favorites-section');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+  const scrollToTeamBattle = () => {
+    const element = document.getElementById('TeamBattle-section');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
   return (
     <nav className="bg-gray-800 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -16,9 +27,20 @@ const Navbar = ({ isLoggedIn, onLogout, onLogin }) => {
                   Home
                 </Link>
                 {isLoggedIn && (
-                  <Link href="/favorites" className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+                  <button
+                    onClick={scrollToFavorites}
+                    className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  >
                     Favorites
-                  </Link>
+                  </button>
+                )}
+                 {isLoggedIn && (
+                  <button
+                    onClick={scrollToTeamBattle}
+                    className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  >
+                    Team Battle Simulator
+                  </button>
                 )}
               </div>
             </div>
@@ -32,7 +54,7 @@ const Navbar = ({ isLoggedIn, onLogout, onLogin }) => {
                 >
                   Logout
                 </button>
-              ) :(
+              ) : (
                 <button onClick={onLogin} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out">
                   Login
                 </button>
@@ -87,10 +109,21 @@ const Navbar = ({ isLoggedIn, onLogout, onLogin }) => {
             Home
           </Link>
           {isLoggedIn && (
-            <Link href="/favorites" className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">
-              Favorites
-            </Link>
-          )}
+                  <button
+                    onClick={scrollToFavorites}
+                    className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  >
+                    Favorites
+                  </button>
+                )}
+                 {isLoggedIn && (
+                  <button
+                    onClick={scrollToTeamBattle}
+                    className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  >
+                    Team Battle Simulator
+                  </button>
+                )}
         </div>
         <div className="pt-4 pb-3 border-t border-gray-700">
           <div className="flex items-center px-5">

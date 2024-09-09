@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import bg2 from '../public/bg2.jpg';
 import AuthForm from '../components/AuthForm';
 import axios from 'axios';
 
