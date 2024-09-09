@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Modal from './Modal'; // Reuse Modal component
+import Modal from './Modal';
 import SuperheroCard from './SuperheroCard';
 import { motion, AnimatePresence } from 'framer-motion';
 

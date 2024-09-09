@@ -33,7 +33,7 @@ const AuthForm = ({ onLogin }) => {
 
   return (
     <form onSubmit={handleSubmit} className="bg-gray-800 bg-opacity-80 p-8 rounded-xl shadow-2xl max-w-md mx-auto backdrop-filter backdrop-blur-lg">
-      <h2 className="text-2xl font-bold text-blue-300 mb-6">{isLogin ? 'Login' : 'Register'}</h2>
+      <h2 className="text-2xl font-bold text-blue-300 mb-6">{isLogin ? 'Login to Enter' : 'Register'}</h2>
       {error && <p className="bg-red-500 text-white p-3 rounded-lg mb-4">{error}</p>}
       <div className="mb-4">
         <input

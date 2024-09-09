@@ -10,7 +10,7 @@ const SuperheroList = () => {
   const [superheroes, setSuperheroes] = useState([]);
   const [filteredHeroes, setFilteredHeroes] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [heroesPerPage] = useState(12); // Defines the number of heroes per page
+  const [heroesPerPage] = useState(12); 
   const [selectedHero, setSelectedHero] = useState(null);
 
   useEffect(() => {
@@ -41,10 +41,9 @@ const SuperheroList = () => {
 
   return (
     <div className="p-8 relative">
-      <h1 className="text-2xl font-bold mb-6">Superheroes</h1>
       <input
         type="text"
-        className="mb-4 p-2 border rounded"
+        className="mb-4 p-2 border rounded text-black"
         placeholder="Search heroes..."
         onChange={handleSearch}
       />
@@ -61,32 +60,26 @@ const SuperheroList = () => {
               className="cursor-pointer"
               onClick={() => setSelectedHero(hero)}
             >
-              {/* <div className="max-w-sm rounded overflow-hidden shadow-lg">
-                <img className="w-full h-48 object-cover" src={hero.image} alt={hero.name} />
-                <div className="px-6 py-4">
-                  <div className="font-bold text-xl mb-2">{hero.name}</div>
-                </div>
-              </div> */}
               <SuperheroCard hero={hero}/>
             </motion.li>
           ))}
         </ul>
       </AnimatePresence>
-      <div className='flex justify-between absolute w-full left-0 px-8 -translate-y-1/2 top-1/2'>
+      <div className='my-4 flex justify-between items-center'>
         <button 
           onClick={() => paginate(currentPage - 1)} 
           disabled={currentPage === 1}
-          className={`text-white text-6xl ${currentPage === 1 ? 'opacity-40 cursor-not-allowed' : 'hover:text-gray-300'}`}>
-          <IoIosArrowBack size={100} />
+          className={`text-white ${currentPage === 1 ? 'opacity-40 cursor-not-allowed' : 'hover:text-gray-300'}`}>
+          <IoIosArrowBack size={48} />
         </button>
+        <Pagination heroesPerPage={heroesPerPage} totalHeroes={filteredHeroes.length} currentPage={currentPage} paginate={paginate} />
         <button 
           onClick={() => paginate(currentPage + 1)} 
           disabled={currentPage === Math.ceil(filteredHeroes.length / heroesPerPage)}
-          className={`text-white text-6xl ${currentPage === Math.ceil(filteredHeroes.length / heroesPerPage) ? 'opacity-50 cursor-not-allowed' : 'hover:text-gray-300'}`}>
-          <IoIosArrowForward size={100}/>
+          className={`text-white ${currentPage === Math.ceil(filteredHeroes.length / heroesPerPage) ? 'opacity-50 cursor-not-allowed' : 'hover:text-gray-300'}`}>
+          <IoIosArrowForward size={48}/>
         </button>
       </div>
-      <Pagination heroesPerPage={heroesPerPage} totalHeroes={filteredHeroes.length} currentPage={currentPage} paginate={paginate} />
       {selectedHero && <Modal hero={selectedHero} onClose={closeModal} />}
     </div>
   );
