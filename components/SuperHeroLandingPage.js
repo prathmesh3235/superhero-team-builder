@@ -32,8 +32,8 @@ const SuperHeroLandingPage = ({ onLogin }) => {
 
 
   return (
-    <div className="min-h-screen overflow-hidden relative bg-gradient-to-br from-blue-900 to-purple-600">
-      {/* Dynamic spotlight effect */}
+    <div className="min-h-screen overflow-hidden relative bg-gradient-to-br from-gray-900 to-gray-700 scroll-smooth">
+      {/* Dynamic spotlight effect
       <motion.div
         className="absolute w-[600px] h-[600px] rounded-full bg-white pointer-events-none"
         style={{
@@ -45,7 +45,7 @@ const SuperHeroLandingPage = ({ onLogin }) => {
         initial="hidden"
         animate="visible"
         transition={{ type: 'spring', stiffness: 100, damping: 30 }}
-      />
+      /> */}
 
       <div className="container mx-auto px-4 py-16 relative z-10">
         <motion.h1
@@ -58,7 +58,9 @@ const SuperHeroLandingPage = ({ onLogin }) => {
         </motion.h1>
         
         <AnimatePresence>
-          <AuthForm onLogin={onLogin} />
+        <div id="login-section">
+          <AuthForm onLogin={onLogin}  />
+          </div>
         </AnimatePresence>
       </div>
     </div>

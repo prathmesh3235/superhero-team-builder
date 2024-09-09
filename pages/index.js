@@ -6,6 +6,7 @@ import FavoritesList from "../components/FavoritesList";
 import Navbar from "../components/Navbar";
 import "../src/app/globals.css";
 import AuthForm from "../components/AuthForm";
+import Footer from "../components/Footer";
 
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -51,6 +52,7 @@ export default function Home() {
       ) : (
         <SuperheroLandingPage onLogin={handleLogin} />
       )}
+      <Footer/>
     </div>
   );
 }

@@ -23,77 +23,72 @@ const Modal = ({ hero, onClose }) => {
     }
   };
 
-  // Trigger notification with timeout
   const triggerNotification = (message, color) => {
     setNotification(message);
     setNotificationColor(color);
     setTimeout(() => setNotification(''), 3000);
   };
 
-
   const handleToggleFavorite = async () => {
     const token = localStorage.getItem('token');
     const headers = { Authorization: `Bearer ${token}` };
     const url = `/api/favorites`;
-    const newFavoriteStatus = !isFavorite; // Corrected logic based on the current hero's favorite status
+    const newFavoriteStatus = !isFavorite;
 
     try {
         if (newFavoriteStatus) {
-            // Adding to favorites
             await axios.post(url, { superheroId: hero.id }, { headers });
-            setIsFavorite(true); // Update favorite status optimistically
+            setIsFavorite(true);
             triggerNotification('Added to Favorites', 'text-green-500');
         } else {
-            // Removing from favorites
             await axios.delete(`${url}?superheroId=${hero.id}`, { headers });
-            setIsFavorite(false); // Update favorite status optimistically
+            setIsFavorite(false);
             triggerNotification('Removed from Favorites', 'text-red-500');
         }
     } catch (error) {
         console.error(newFavoriteStatus ? 'Error adding to favorites:' : 'Error removing from favorites:', error);
-        // Optionally handle failed updates, e.g., revert optimistic updates or show error messages
-        setIsFavorite(hero.isFavorite); // Revert to original state in case of error
+        setIsFavorite(hero.isFavorite);
         triggerNotification('Failed to update favorites', 'text-red-500');
     }
-
-    setTimeout(() => setNotification(''), 3000); // Clear notification after a delay
   };
 
   if (!hero) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center p-4 z-50">
-      <div className="bg-gray-800 p-6 rounded-lg shadow-xl md:max-w-xl w-full">
-        <div className="flex flex-col md:flex-row">
-          <img src={hero.image} alt={hero.name} className="md:w-1/2 w-full h-auto object-cover rounded" />
-          <div className="md:ml-6 mt-4 md:mt-0 md:w-2/3">
-            <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold mb-4 text-white">{hero.fullName || hero.name}</h2>
-              <div onMouseEnter={() => setShowTooltip(true)} onMouseLeave={() => setShowTooltip(false)} className="relative">
+      <div className="bg-gray-800 p-4 sm:p-6 rounded-lg shadow-xl w-full max-w-lg overflow-y-auto max-h-[90vh]">
+        <div className="flex flex-col">
+          <img src={hero.image} alt={hero.name} className="w-full h-64 object-cover rounded mb-4" />
+          <div className="flex-grow">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl sm:text-2xl font-bold text-white">{hero.fullName || hero.name}</h2>
+              <div className="relative">
                 <button 
                   onClick={handleToggleFavorite} 
-                  className="text-yellow-400 hover:text-yellow-500 text-3xl"
+                  className="text-yellow-400 hover:text-yellow-500 text-2xl sm:text-3xl"
+                  onMouseEnter={() => setShowTooltip(true)}
+                  onMouseLeave={() => setShowTooltip(false)}
                 >
                   {isFavorite ? <IoStar /> : <IoStarOutline />}
                 </button>
                 {showTooltip && (
-                  <span className="absolute -mt-12 text-center w-32 px-2 py-1 bg-black text-white rounded shadow-lg z-50">
+                  <span className="absolute -top-10 left-1/2 transform -translate-x-1/2 w-32 px-2 py-1 bg-black text-white text-xs rounded shadow-lg z-50">
                     {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
                   </span>
                 )}
               </div>
             </div>
             {notification && (
-              <div className={`text-center py-2 my-2 text-lg ${notificationColor}`}>
+              <div className={`text-center py-2 my-2 text-sm sm:text-base ${notificationColor}`}>
                 {notification}
               </div>
             )}
-            <ul className="list-disc pl-5 text-white space-y-2">
+            <ul className="list-disc pl-5 text-white space-y-1 text-sm sm:text-base mb-4">
               {['intelligence', 'strength', 'speed', 'durability', 'power', 'combat', 'alignment'].map((attr) => (
                 <li key={attr}><strong>{attr.charAt(0).toUpperCase() + attr.slice(1)}:</strong> {hero[attr]}</li>
               ))}
             </ul>
-            <button onClick={onClose} className="mt-4 py-2 px-4 bg-red-500 text-white rounded hover:bg-red-700 transition-colors duration-300 ease-in-out">Close</button>
+            <button onClick={onClose} className="w-full py-2 px-4 bg-red-500 text-white rounded hover:bg-red-700 transition-colors duration-300 ease-in-out">Close</button>
           </div>
         </div>
       </div>

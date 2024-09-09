@@ -1,103 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { motion, useAnimation } from 'framer-motion';
+import TeamCard from './TeamCard';
+import BattleResult from './BattleResult';
+import StatBar from './StatBar';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { Shield, Zap, Brain } from 'lucide-react';
-
-const TeamCard = ({ team, type, onSelect }) => (
-  <motion.div 
-    className="bg-gray-800 p-4 rounded-lg shadow-lg"
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.5 }}
-  >
-    <h3 className="text-xl font-bold text-white mb-2">Team {type}</h3>
-    <select 
-      className="w-full p-2 bg-gray-700 text-white rounded mb-4"
-      onChange={(e) => onSelect(e.target.value)}
-    >
-      <option value="">Select Team Type</option>
-      <option value="balanced">Balanced</option>
-      <option value="strength">Strength-based</option>
-      <option value="intelligence">Intelligence-based</option>
-      <option value="random">Random</option>
-    </select>
-    {team.map((hero, index) => (
-      <motion.div 
-        key={hero.id} 
-        className="bg-gray-700 p-2 rounded mb-2 flex items-center"
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.3, delay: index * 0.1 }}
-      >
-        <div className={`w-8 h-8 rounded-full mr-2 flex items-center justify-center ${
-          hero.alignment === 'good' ? 'bg-green-500' : 
-          hero.alignment === 'bad' ? 'bg-red-500' : 'bg-yellow-500'
-        }`}>
-          {hero.name.charAt(0)}
-        </div>
-        <span className="text-white">{hero.name}</span>
-        <span className="text-gray-400 ml-auto">{hero.alignment}</span>
-      </motion.div>
-    ))}
-  </motion.div>
-);
-
-const BattleResult = ({ result }) => (
-  <motion.div 
-    className="bg-gray-800 p-4 rounded-lg shadow-lg mt-4"
-    initial={{ opacity: 0, scale: 0.9 }}
-    animate={{ opacity: 1, scale: 1 }}
-    transition={{ duration: 0.5 }}
-  >
-    <h3 className="text-2xl font-bold text-white mb-4">Battle Result</h3>
-    <p className="text-xl text-green-400 mb-2">{result.winner} wins!</p>
-    <p className="text-gray-300 mb-4">{result.reason}</p>
-    <div className="grid grid-cols-2 gap-4">
-      <div>
-        <h4 className="text-lg font-semibold text-white mb-2">Team A Stats</h4>
-        <StatBar icon={<Shield />} label="Strength" value={result.statsA.totalStrength} />
-        <StatBar icon={<Brain />} label="Intelligence" value={result.statsA.totalIntelligence} />
-        <StatBar icon={<Zap />} label="Speed" value={result.statsA.totalSpeed} />
-      </div>
-      <div>
-        <h4 className="text-lg font-semibold text-white mb-2">Team B Stats</h4>
-        <StatBar icon={<Shield />} label="Strength" value={result.statsB.totalStrength} />
-        <StatBar icon={<Brain />} label="Intelligence" value={result.statsB.totalIntelligence} />
-        <StatBar icon={<Zap />} label="Speed" value={result.statsB.totalSpeed} />
-      </div>
-    </div>
-    <ResponsiveContainer width="100%" height={200} className="mt-4">
-      <BarChart data={[
-        {name: 'Strength', A: result.statsA.totalStrength, B: result.statsB.totalStrength},
-        {name: 'Intelligence', A: result.statsA.totalIntelligence, B: result.statsB.totalIntelligence},
-        {name: 'Speed', A: result.statsA.totalSpeed, B: result.statsB.totalSpeed},
-      ]}>
-        <XAxis dataKey="name" />
-        <YAxis />
-        <Tooltip />
-        <Bar dataKey="A" fill="#4CAF50" name="Team A" />
-        <Bar dataKey="B" fill="#2196F3" name="Team B" />
-      </BarChart>
-    </ResponsiveContainer>
-  </motion.div>
-);
-
-const StatBar = ({ icon, label, value }) => (
-  <div className="flex items-center mb-2">
-    {icon}
-    <span className="text-white ml-2">{label}:</span>
-    <div className="ml-auto bg-gray-700 w-32 h-4 rounded-full overflow-hidden">
-      <motion.div 
-        className="h-full bg-blue-500"
-        initial={{ width: 0 }}
-        animate={{ width: `${(value / 500) * 100}%` }}
-        transition={{ duration: 1, ease: "easeOut" }}
-      />
-    </div>
-    <span className="text-white ml-2 w-8 text-right">{value}</span>
-  </div>
-);
 
 const TeamBattleSimulator = () => {
   const [heroes, setHeroes] = useState([]);
@@ -125,6 +33,13 @@ const TeamBattleSimulator = () => {
     fetchHeroes();
   }, []);
 
+  const handleTeamSelect = (team, type) => {
+    if (type === 'A') {
+      setTeamA(team);
+    } else {
+      setTeamB(team);
+    }
+  };
   useEffect(() => {
     if (teamA.length > 0 && compareButtonRef.current) {
       compareButtonRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -260,7 +175,7 @@ const TeamBattleSimulator = () => {
         Compare Teams
       </motion.button>
       <div ref={resultContainerRef} className="mt-8">
-        {comparisonResult && <BattleResult result={comparisonResult} />}
+        {comparisonResult && <BattleResult result={comparisonResult} statsA={comparisonResult.statsA} statsB={comparisonResult.statsB} />}
       </div>
     </div>
   );

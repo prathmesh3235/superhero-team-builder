@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
-import Modal from './Modal'; // Assuming Modal is now a separate component
-import Pagination from './Pagination'; // Assuming Pagination is separated if needed, or kept within this file if not
+import Modal from './Modal'; 
+import Pagination from './Pagination';
 import SuperheroCard from './SuperheroCard';
 
 const SuperheroList = () => {

@@ -5,7 +5,7 @@ const Pagination = ({ heroesPerPage, totalHeroes, currentPage, paginate }) => {
   return (
     <div className='flex justify-center space-x-2 mt-8'>
       {Array.from({ length: totalPages }, (_, i) => i + 1).map(number => (
-        <li key={number} className='cursor-pointer text-white text-lg'>
+        <li key={number} className='cursor-pointer text-white'>
           <a onClick={() => paginate(number)}>{number}</a>
         </li>
       ))}
