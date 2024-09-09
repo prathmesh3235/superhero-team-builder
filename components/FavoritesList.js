@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import Modal from './Modal';
-import SuperheroCard from './SuperheroCard';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useFavorites } from '../context/FavoritesContext';
+import React, { useState } from "react";
+import Modal from "./Modal";
+import SuperheroCard from "./SuperheroCard";
+import { motion, AnimatePresence } from "framer-motion";
+import { useFavorites } from "../context/FavoritesContext";
 
 const FavoritesList = () => {
   const { favorites } = useFavorites();
@@ -14,9 +14,13 @@ const FavoritesList = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 py-8 bg-gray-900">
-      <h2 className="text-2xl font-bold text-white mb-6">Your Favorite Superheroes</h2>
+      <h2 className="text-2xl font-bold text-white mb-6">
+        Your Favorite Superheroes
+      </h2>
       {favorites.length === 0 ? (
-        <p className="text-white text-lg">You haven't added any favorites yet</p>
+        <p className="text-white text-lg">
+          You haven't added any favorites yet
+        </p>
       ) : (
         <AnimatePresence>
           <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -31,7 +35,7 @@ const FavoritesList = () => {
                 className="cursor-pointer"
                 onClick={() => setSelectedHero(hero)}
               >
-                <SuperheroCard hero={hero}/>
+                <SuperheroCard hero={hero} />
               </motion.li>
             ))}
           </ul>

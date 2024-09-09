@@ -1,7 +1,5 @@
-# Install the application dependencies in a full UBI Node docker image
 FROM registry.access.redhat.com/ubi8/nodejs-18:latest AS base
 
-# Elevate privileges to run npm
 USER root
 
 # Copy package.json and package-lock.json

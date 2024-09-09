@@ -7,7 +7,7 @@ import Navbar from "../components/Navbar";
 import "../src/app/globals.css";
 import Footer from "../components/Footer";
 import { FavoritesProvider } from "../context/FavoritesContext";
-import { useRouter } from 'next/router';
+import { useRouter } from "next/router";
 
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -17,14 +17,14 @@ export default function Home() {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
     if (!token) {
-      router.push('/login');  // Redirect to login page if no token found
+      router.push("/login"); // Redirect to login page if no token found
     }
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     setIsLoggedIn(false);
-    router.push('/login');
+    router.push("/login");
   };
 
   return (
@@ -32,7 +32,7 @@ export default function Home() {
       <div className="min-h-screen bg-gray-900 text-white relative scroll-smooth">
         <Navbar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
         <div className="container mx-auto px-4 py-8 relative z-10">
-          <h1 className="text-5xl font-bold text-center my-8 text-gray-200 tracking-wide">
+          <h1 className="text-5xl font-bold text-center my-5 py-10 text-gray-200 tracking-wide">
             Welcome to the World of SuperHeroes
           </h1>
           <div className="space-y-8">

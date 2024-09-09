@@ -138,7 +138,6 @@ const TeamBattleSimulator = () => {
       )} points difference).`;
     }
 
-    // Consider alignment balance as a potential game-changer
     const isTeamABalanced = Object.keys(statsA.alignmentBalance).length >= 2;
     const isTeamBBalanced = Object.keys(statsB.alignmentBalance).length >= 2;
     if (isTeamABalanced && !isTeamBBalanced) {
