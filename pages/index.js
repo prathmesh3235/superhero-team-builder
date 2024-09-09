@@ -46,13 +46,23 @@ export default function Home() {
             </div>{" "}
             <div id="TeamBattle-section">
               <TeamRecommendation />
+              <div className="max-w-7xl mx-auto h-16 flex justify-center items-center">
+                <button
+                  onClick={() =>
+                    window.scrollTo({ top: 0, behavior: "smooth" })
+                  }
+                  className="bg-gray-800 hover:bg-blue-700 text-white font-bold py-2 px-4 mt-1 rounded"
+                >
+                  Scroll to Top
+                </button>
+              </div>
             </div>{" "}
           </div>
         </div>
       ) : (
         <SuperheroLandingPage onLogin={handleLogin} />
       )}
-      <Footer/>
+      <Footer />
     </div>
   );
 }

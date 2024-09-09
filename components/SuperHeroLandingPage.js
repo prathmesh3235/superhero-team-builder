@@ -3,22 +3,43 @@ import { motion, AnimatePresence } from 'framer-motion';
 import AuthForm from '../components/AuthForm';
 import axios from 'axios';
 
-
-const SuperHeroLandingPage = ({ onLogin }) => {
-  const [hoveredHero, setHoveredHero] = useState(null);
-  const [superheroes, setSuperheroes] = useState([]);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+const ImageCarousel = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const images = [
+    '/bg1.webp',
+    '/bg4.webp',
+    '/bg2.webp',
+    '/bg5.webp'
+  ];
 
   useEffect(() => {
-    const handleMouseMove = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-    };
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 5000);
+    return () => clearInterval(interval);
   }, []);
+
+  return (
+    <div className="w-full overflow-hidden relative h-40">
+      <div
+        className="flex transition-transform duration-500 ease-in-out"
+        style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+      >
+        {images.map((src, index) => (
+          <img
+            key={index}
+            src={src}
+            alt={`Superhero ${index + 1}`}
+            className="w-full h-40 object-cover flex-shrink-0"
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const SuperHeroLandingPage = ({ onLogin }) => {
+  const [superheroes, setSuperheroes] = useState([]);
 
   useEffect(() => {
     const fetchSuperheroes = async () => {
@@ -30,23 +51,8 @@ const SuperHeroLandingPage = ({ onLogin }) => {
     fetchSuperheroes();
   }, []);
 
-
   return (
     <div className="min-h-screen overflow-hidden relative bg-gradient-to-br from-gray-900 to-gray-700 scroll-smooth">
-      {/* Dynamic spotlight effect
-      <motion.div
-        className="absolute w-[600px] h-[600px] rounded-full bg-white pointer-events-none"
-        style={{
-          left: mousePosition.x - 300,
-          top: mousePosition.y - 300,
-          mixBlendMode: 'soft-light',
-        }}
-        variants={{ hidden: { opacity: 0, scale: 0 }, visible: { opacity: 0.15, scale: 1 } }}
-        initial="hidden"
-        animate="visible"
-        transition={{ type: 'spring', stiffness: 100, damping: 30 }}
-      /> */}
-
       <div className="container mx-auto px-4 py-16 relative z-10">
         <motion.h1
           className="text-6xl font-bold mb-12 text-center text-white"
@@ -57,9 +63,13 @@ const SuperHeroLandingPage = ({ onLogin }) => {
           The Superhero Universe
         </motion.h1>
         
+        <div className="mb-8">
+          <ImageCarousel />
+        </div>
+
         <AnimatePresence>
-        <div id="login-section">
-          <AuthForm onLogin={onLogin}  />
+          <div id="login-section">
+            <AuthForm onLogin={onLogin} />
           </div>
         </AnimatePresence>
       </div>

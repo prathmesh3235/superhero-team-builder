@@ -43,7 +43,7 @@ const SuperheroList = () => {
     <div className="p-8 relative">
       <input
         type="text"
-        className="mb-4 p-2 border rounded text-black"
+        className="mb-4 p-2 border bg-mintcream rounded text-black"
         placeholder="Search heroes..."
         onChange={handleSearch}
       />
