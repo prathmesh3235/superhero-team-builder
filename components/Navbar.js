@@ -14,10 +14,10 @@ const Navbar = ({ isLoggedIn, onLogout, onLogin }) => {
 
   return (
     <nav className="bg-gray-800 shadow-lg">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
-          <WiAlien size={65}/>
+            <WiAlien size={48} className="text-white" />
           </div>
           <div className="hidden md:block">
             <div className="ml-10 flex items-center space-x-4">
