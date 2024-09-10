@@ -23,7 +23,7 @@ USER root
 RUN chown -R 1001:0 /opt/app-root/src
 
 # Create a directory for the SQLite database and set permissions
-RUN mkdir -p /opt/app-root/src/prisma/data && chown -R 1001:0 /opt/app-root/src/prisma/data
+# RUN mkdir -p /opt/app-root/src/prisma/data && chown -R 1001:0 /opt/app-root/src/prisma/data
 
 # Restore default user privileges
 USER 1001
@@ -44,4 +44,4 @@ RUN npx prisma db pull
 RUN npx prisma generate
 
 # Start node process
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "dev"]
