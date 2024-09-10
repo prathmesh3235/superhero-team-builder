@@ -25,11 +25,11 @@ docker run -p 3000:3000 superhero-team-builder
 Open your browser and go to:
 http://localhost:3000
 
-### 4. TO GET ADMIN ACCESS
+### 4. To Get Admin Access
 
 During Registeration use ADMIN CODE : "ADMIN" 
 
-### 4. Stop the application
+### 5. To Stop the application
 docker ps
 
 docker stop container-id
