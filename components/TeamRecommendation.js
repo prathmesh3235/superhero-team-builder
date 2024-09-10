@@ -40,24 +40,17 @@ const TeamBattleSimulator = () => {
       setTeamB(team);
       setTeamBType(selectedType);
     }
+    setComparisonResult(null);
   };
-  useEffect(() => {
-    if (teamA.length > 0 && compareButtonRef.current) {
-      compareButtonRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
-    }
-  }, [teamA]);
 
   useEffect(() => {
-    if (teamB.length > 0 && compareButtonRef.current) {
+    if ((teamA.length > 0 || teamB.length > 0) && compareButtonRef.current) {
       compareButtonRef.current.scrollIntoView({
         behavior: "smooth",
         block: "center",
       });
     }
-  }, [teamB]);
+  }, [teamA, teamB]);
 
   useEffect(() => {
     if (comparisonResult && resultContainerRef.current) {
@@ -114,8 +107,7 @@ const TeamBattleSimulator = () => {
 
     let winner, reason;
     const strengthDiff = statsA.totalStrength - statsB.totalStrength;
-    const intelligenceDiff =
-      statsA.totalIntelligence - statsB.totalIntelligence;
+    const intelligenceDiff = statsA.totalIntelligence - statsB.totalIntelligence;
     const speedDiff = statsA.totalSpeed - statsB.totalSpeed;
 
     if (
@@ -123,31 +115,23 @@ const TeamBattleSimulator = () => {
       Math.abs(strengthDiff) > Math.abs(speedDiff)
     ) {
       winner = strengthDiff > 0 ? "Team A" : "Team B";
-      reason = `They have superior strength (${Math.abs(
-        strengthDiff
-      )} points difference).`;
+      reason = `They have superior strength (${Math.abs(strengthDiff)} points difference).`;
     } else if (Math.abs(intelligenceDiff) > Math.abs(speedDiff)) {
       winner = intelligenceDiff > 0 ? "Team A" : "Team B";
-      reason = `They have superior intelligence (${Math.abs(
-        intelligenceDiff
-      )} points difference).`;
+      reason = `They have superior intelligence (${Math.abs(intelligenceDiff)} points difference).`;
     } else {
       winner = speedDiff > 0 ? "Team A" : "Team B";
-      reason = `They have superior speed (${Math.abs(
-        speedDiff
-      )} points difference).`;
+      reason = `They have superior speed (${Math.abs(speedDiff)} points difference).`;
     }
 
     const isTeamABalanced = Object.keys(statsA.alignmentBalance).length >= 2;
     const isTeamBBalanced = Object.keys(statsB.alignmentBalance).length >= 2;
     if (isTeamABalanced && !isTeamBBalanced) {
       winner = "Team A";
-      reason +=
-        " Moreover, Team A has a more balanced alignment, giving them an edge in team dynamics.";
+      reason += " Moreover, Team A has a more balanced alignment, giving them an edge in team dynamics.";
     } else if (!isTeamABalanced && isTeamBBalanced) {
       winner = "Team B";
-      reason +=
-        " Moreover, Team B has a more balanced alignment, giving them an edge in team dynamics.";
+      reason += " Moreover, Team B has a more balanced alignment, giving them an edge in team dynamics.";
     }
 
     setComparisonResult({ winner, reason, statsA, statsB });
@@ -156,12 +140,15 @@ const TeamBattleSimulator = () => {
   const handleTeamASelect = (type) => {
     setTeamA(getTeam(type));
     setTeamAType(type);
+    setComparisonResult(null);
   };
 
   const handleTeamBSelect = (type) => {
     setTeamB(getTeam(type));
     setTeamBType(type);
+    setComparisonResult(null);
   };
+
   if (loading) {
     return (
       <div className="text-center text-white text-2xl py-20">
@@ -206,13 +193,21 @@ const TeamBattleSimulator = () => {
       </div>
       <motion.button
         ref={compareButtonRef}
-        className="w-full bg-blue-600 text-white py-3 rounded-lg font-bold text-lg hover:bg-blue-700 transition duration-300"
+        className={`w-full py-3 rounded-lg font-bold text-lg transition duration-300 ${
+          teamA.length === 0 || teamB.length === 0
+            ? "bg-gray-500 text-gray-300 cursor-not-allowed"
+            : "bg-blue-600 text-white hover:bg-blue-700"
+        }`}
         onClick={compareTeams}
         disabled={teamA.length === 0 || teamB.length === 0}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
+        whileHover={{ scale: teamA.length > 0 && teamB.length > 0 ? 1.05 : 1 }}
+        whileTap={{ scale: teamA.length > 0 && teamB.length > 0 ? 0.95 : 1 }}
       >
-        Compare Teams
+        {teamA.length === 0 || teamB.length === 0
+          ? "Select both teams to compare"
+          : comparisonResult
+          ? "Compare Teams Again"
+          : "Compare Teams"}
       </motion.button>
       <div ref={resultContainerRef} className="mt-8">
         {comparisonResult && (
