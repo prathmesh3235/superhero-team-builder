@@ -10,8 +10,8 @@ A Next.js application to explore the World of SuperHeroes
 
 ### 1. Clone the Repository
 
-#### git clone https://github.com/prathmesh3235/superhero-team-builder.git
-##### cd superhero-team-builder
+ git clone https://github.com/prathmesh3235/superhero-team-builder.git
+ cd superhero-team-builder
 
 ### 2. Build and run the application using the Docker
 
