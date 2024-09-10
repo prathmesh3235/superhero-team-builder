@@ -35,6 +35,9 @@ ENV PORT 3000
 EXPOSE 3000
 
 # Start node process
+RUN npx prisma db pull
+
+# Start node process
 RUN npx prisma generate
 
 # Start node process

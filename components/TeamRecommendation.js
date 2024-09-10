@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import axios from "../axios/axiosInstance";
+import axios from "../utils/axiosInstance";
 import { motion, useAnimation } from "framer-motion";
 import TeamCard from "./TeamCard";
 import BattleResult from "./BattleResult";

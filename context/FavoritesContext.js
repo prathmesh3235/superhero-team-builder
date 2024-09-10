@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
-import axios from "../axios/axiosInstance";
+import axios from "../utils/axiosInstance";
 
 const FavoritesContext = createContext();
 

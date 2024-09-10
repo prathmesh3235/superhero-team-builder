@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "../axios/axiosInstance";
+import axios from "../utils/axiosInstance";
 import { motion, AnimatePresence } from "framer-motion";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import Modal from "./Modal";

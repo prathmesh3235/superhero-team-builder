@@ -1,43 +1,42 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
+}
+
 datasource db {
   provider = "sqlite"
   url      = "file:./dev.db"
 }
 
-generator client {
-  provider = "prisma-client-js"
-  binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
-}
-
-
 model Superhero {
-  id         Int      @id @default(autoincrement())
-  name       String
-  fullName   String?
+  id           Int        @id @default(autoincrement())
+  name         String
+  fullName     String?
   intelligence Int
-  strength   Int
-  speed      Int
-  durability Int
-  power      Int
-  combat     Int
-  alignment  String
-  image      String?
-  favorites  Favorite[]
+  strength     Int
+  speed        Int
+  durability   Int
+  power        Int
+  combat       Int
+  alignment    String
+  image        String?
+  favorites    Favorite[]
 }
 
 model User {
-  id         Int      @id @default(autoincrement())
-  username   String   @unique
-  password   String   @unique
-  isEditor   Boolean  @default(false)
-  favorites  Favorite[]
+  id        Int        @id @default(autoincrement())
+  username  String     @unique
+  password  String     @unique
+  isEditor  Boolean    @default(false)
+  favorites Favorite[]
 }
 
 model Favorite {
-  id          Int      @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   userId      Int
   superheroId Int
-  user        User     @relation(fields: [userId], references: [id])
   superhero   Superhero @relation(fields: [superheroId], references: [id])
+  user        User      @relation(fields: [userId], references: [id])
 
   @@unique([userId, superheroId])
 }

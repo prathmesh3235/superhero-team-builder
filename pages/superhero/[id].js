@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
-import axios from "../../axios/axiosInstance";
+import axios from "../../utils/axiosInstance";
 import Image from "next/image";
 
 export default function SuperheroDetail() {

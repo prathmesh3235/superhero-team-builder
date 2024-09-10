@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "../axios/axiosInstance";
+import axios from "../utils/axiosInstance";
 import { useRouter } from "next/router";
 
 const AuthForm = () => {
