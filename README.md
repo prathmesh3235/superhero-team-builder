@@ -25,9 +25,9 @@ docker run -p 3000:3000 superhero-team-builder
 Open your browser and go to:
 http://localhost:3000
 
-### 4. To Get Admin Access
+Become an admin to get access to edit the SuperHero Data.
 
-During Registeration use ADMIN CODE : "ADMIN" 
+Use ADMIN CODE : "ADMIN" during Registeration 
 
 ### 5. To Stop the application
 docker ps
