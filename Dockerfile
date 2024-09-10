@@ -15,7 +15,7 @@ FROM registry.access.redhat.com/ubi8/nodejs-18-minimal:latest AS final
 COPY --from=base /opt/app-root/src/node_modules /opt/app-root/src/node_modules
 COPY . /opt/app-root/src
 
-# Build the pacckages in minimal image
+# Build the packages in minimal image
 RUN npm run build
 
 # Elevate privileges to change owner of source files
@@ -29,7 +29,7 @@ RUN chown -R 1001:0 /opt/app-root/src
 USER 1001
 
 # Listen on port 3000
-ENV PORT 3000
+ENV PORT=3000
 
 # Container exposes port 3000
 EXPOSE 3000
@@ -41,8 +41,6 @@ RUN npx prisma db pull
 RUN npx prisma generate
 
 RUN npx prisma migrate dev
-
-
 
 # Start node process
 CMD ["npm", "run", "start"]
