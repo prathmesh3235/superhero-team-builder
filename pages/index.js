@@ -8,6 +8,7 @@ import Footer from "../components/Footer";
 import { FavoritesProvider } from "../context/FavoritesContext";
 import { useRouter } from "next/router";
 import jwt from "jsonwebtoken";
+import LoadingScreen from '../components/LoadingScreen';
 
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -71,7 +72,7 @@ export default function Home() {
           </div>
         </FavoritesProvider>
       ) : (
-        <p>Loading....</p>
+        <LoadingScreen/>
       )}
     </div>
   );

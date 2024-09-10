@@ -54,18 +54,6 @@ const Modal = ({ hero, onClose, isAdmin, onEdit, isFromFavlist }) => {
     }));
   };
 
-  // Updated handleSave function with proper asynchronous handling and state updating
-  // const handleSave = async () => {
-  //   try {
-  //     const response = await axios.put(`/superheroes/${hero.id}`, editedHero);
-  //     triggerNotification("Superhero updated successfully", "text-green-500");
-  //     onEdit(response.data);  // assuming the server responds with the updated object
-  //     setEditMode(false);
-  //   } catch (error) {
-  //     triggerNotification("Failed to update superhero", "text-red-500");
-  //   }
-  // };
-
   const handleSave = useCallback(async () => {
     try {
       const response = await axios.put(`/superheroes/${hero.id}`, editedHero);
@@ -92,19 +80,10 @@ const Modal = ({ hero, onClose, isAdmin, onEdit, isFromFavlist }) => {
           />
           <div className="flex-grow">
             <div className="flex justify-between items-center mb-4">
-              {editMode ? (
-                <input
-                  type="text"
-                  name="name"
-                  value={editedHero.name}
-                  onChange={handleInputChange}
-                  className="text-xl sm:text-2xl font-bold text-white bg-gray-700 rounded px-2 py-1"
-                />
-              ) : (
-                <h2 className="text-xl sm:text-2xl font-bold text-white">
-                  {hero.fullName || hero.name}
-                </h2>
-              )}
+              <h2 className="text-xl sm:text-2xl font-bold text-white">
+                {hero.fullName || hero.name}
+              </h2>
+
               <div className="flex items-center">
                 {isAdmin && !isFromFavlist && (
                   <button
