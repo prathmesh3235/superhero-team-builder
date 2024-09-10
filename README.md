@@ -31,7 +31,6 @@ http://localhost:3000
 ----------------------------------------
 
 # Instructions to Deploy the Application to Red Hat OpenShift
-----------------------------------------
 
 1. Create an account and sign in to Red Hat Developer Sandbox:
    https://developers.redhat.com/developer-sandbox
