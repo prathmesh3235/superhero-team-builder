@@ -6,7 +6,7 @@ import Modal from "./Modal";
 import Pagination from "./Pagination";
 import SuperheroCard from "./SuperheroCard";
 
-const SuperheroList = () => {
+const SuperheroList = ({ isAdmin }) => {
   const [superheroes, setSuperheroes] = useState([]);
   const [filteredHeroes, setFilteredHeroes] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -99,7 +99,9 @@ const SuperheroList = () => {
           <IoIosArrowForward size={48} />
         </button>
       </div>
-      {selectedHero && <Modal hero={selectedHero} onClose={closeModal} />}
+      {selectedHero && (
+        <Modal hero={selectedHero} onClose={closeModal} isAdmin={isAdmin} />
+      )}
     </div>
   );
 };

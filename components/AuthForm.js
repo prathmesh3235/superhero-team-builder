@@ -6,6 +6,7 @@ const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [adminCode, setAdminCode] = useState("");
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const router = useRouter();
@@ -26,6 +27,7 @@ const AuthForm = () => {
         action: isLogin ? "login" : "register",
         username,
         password,
+        adminCode: adminCode || undefined,
       });
 
       if (isLogin) {
@@ -40,6 +42,7 @@ const AuthForm = () => {
         setIsLogin(true);
         setUsername("");
         setPassword("");
+        setAdminCode("");
         setSuccessMessage("User created successfully! Please log in.");
         clearSuccessMessage();
       }
@@ -75,7 +78,7 @@ const AuthForm = () => {
           className="w-full p-3 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
         />
       </div>
-      <div className="mb-6">
+      <div className="mb-4">
         <input
           type="password"
           placeholder="Password"
@@ -85,6 +88,17 @@ const AuthForm = () => {
           className="w-full p-3 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
         />
       </div>
+      {!isLogin && (
+        <div className="mb-6">
+          <input
+            type="text"
+            placeholder="Admin Code (optional)"
+            value={adminCode}
+            onChange={(e) => setAdminCode(e.target.value)}
+            className="w-full p-3 rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
+          />
+        </div>
+      )}
       <button
         type="submit"
         className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:shadow-outline transition duration-300 ease-in-out transform hover:-translate-y-1"
@@ -93,7 +107,10 @@ const AuthForm = () => {
       </button>
       <button
         type="button"
-        onClick={() => setIsLogin(!isLogin)}
+        onClick={() => {
+          setIsLogin(!isLogin);
+          setAdminCode("");
+        }}
         className="w-full mt-4 text-blue-400 hover:text-blue-300 transition duration-300"
       >
         {isLogin ? "Need to register?" : "Already have an account?"}

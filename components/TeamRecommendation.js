@@ -82,15 +82,15 @@ const TeamBattleSimulator = () => {
       case "strength":
         selectedHeroes = heroes
           .sort((a, b) => b.strength - a.strength)
-          .slice(0, 5);
+          .slice(0, 6);
         break;
       case "intelligence":
         selectedHeroes = heroes
           .sort((a, b) => b.intelligence - a.intelligence)
-          .slice(0, 5);
+          .slice(0, 6);
         break;
       case "random":
-        selectedHeroes = heroes.sort(() => 0.5 - Math.random()).slice(0, 5);
+        selectedHeroes = heroes.sort(() => 0.5 - Math.random()).slice(0, 6);
         break;
       default:
         selectedHeroes = [];

@@ -4,7 +4,7 @@ import SuperheroCard from "./SuperheroCard";
 import { motion, AnimatePresence } from "framer-motion";
 import { useFavorites } from "../context/FavoritesContext";
 
-const FavoritesList = () => {
+const FavoritesList = ({ isAdmin }) => {
   const { favorites } = useFavorites();
   const [selectedHero, setSelectedHero] = useState(null);
 
@@ -19,7 +19,7 @@ const FavoritesList = () => {
       </h2>
       {favorites.length === 0 ? (
         <p className="text-white text-lg">
-          You haven`&apos;`t added any favorites yet
+          You haven't added any favorites yet
         </p>
       ) : (
         <AnimatePresence>
@@ -41,7 +41,9 @@ const FavoritesList = () => {
           </ul>
         </AnimatePresence>
       )}
-      {selectedHero && <Modal hero={selectedHero} onClose={closeModal} />}
+      {selectedHero && (
+        <Modal hero={selectedHero} onClose={closeModal} isAdmin={isAdmin} />
+      )}
     </div>
   );
 };

@@ -7,22 +7,33 @@ import "../src/app/globals.css";
 import Footer from "../components/Footer";
 import { FavoritesProvider } from "../context/FavoritesContext";
 import { useRouter } from "next/router";
+import jwt from "jsonwebtoken";
 
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token);
-    if (!token) {
-      router.push("/login"); // Redirect to login page if no token found
+    if (token) {
+      setIsLoggedIn(true);
+      try {
+        const decodedToken = jwt.decode(token);
+        
+        setIsAdmin(decodedToken.isEditor || false);
+      } catch (error) {
+        console.error("Error decoding token:", error);
+      }
+    } else {
+      router.push("/login");
     }
   }, [router]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     setIsLoggedIn(false);
+    setIsAdmin(false);
     router.push("/login");
   };
 
@@ -37,10 +48,10 @@ export default function Home() {
                 Welcome to the World of SuperHeroes
               </h1>
               <div className="space-y-8">
-                <SuperheroList />
+                <SuperheroList isAdmin={isAdmin} />
                 <div id="favorites-section">
-                  <FavoritesList />
-                </div>{" "}
+                  <FavoritesList isAdmin={isAdmin} />
+                </div>
                 <div id="TeamBattle-section">
                   <TeamRecommendation />
                   <div className="max-w-7xl mx-auto h-16 flex justify-center items-center">
@@ -53,7 +64,7 @@ export default function Home() {
                       Scroll to Top
                     </button>
                   </div>
-                </div>{" "}
+                </div>
               </div>
             </div>
             <Footer />
