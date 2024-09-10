@@ -44,4 +44,4 @@ RUN npx prisma db pull
 RUN npx prisma generate
 
 # Start node process
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "start"]
