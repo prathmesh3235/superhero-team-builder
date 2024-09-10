@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import Image from "next/image";
 import { IoStarOutline, IoStar } from "react-icons/io5";
 import { useFavorites } from "../context/FavoritesContext";
 
@@ -35,9 +36,11 @@ const Modal = ({ hero, onClose }) => {
     <div className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center p-4 z-50">
       <div className="bg-gray-800 p-4 sm:p-6 rounded-lg shadow-xl w-full max-w-lg ">
         <div className="flex flex-col">
-          <img
+          <Image
             src={hero.image}
             alt={hero.name}
+            width={400} // Adjust width to match your design
+            height={256} // Adjust height to match your design
             className="w-full h-64 object-cover rounded mb-4"
           />
           <div className="flex-grow">

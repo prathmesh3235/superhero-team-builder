@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import AuthForm from '../components/AuthForm';
+import React, { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import AuthForm from "../components/AuthForm";
+import Image from "next/image";
 
 const SuperHeroLandingPage = ({ onLogin }) => {
   const [superheroes, setSuperheroes] = useState([]);
@@ -18,16 +19,18 @@ const SuperHeroLandingPage = ({ onLogin }) => {
         </motion.h1>
 
         <div className="w-full h-80 mb-12 relative overflow-hidden rounded-lg shadow-lg">
-          <img 
-            src="/bg1.webp" 
-            alt="Superhero lineup" 
-            className="w-full h-full object-cover"
+          <Image
+            src="/bg1.webp"
+            alt="Superhero lineup"
+            layout="fill"
+            objectFit="cover"
+            className="rounded-lg shadow-lg"
           />
         </div>
 
         <AnimatePresence>
           <div id="login-section">
-            <AuthForm/>
+            <AuthForm />
           </div>
         </AnimatePresence>
       </div>

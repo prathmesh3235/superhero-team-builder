@@ -1,4 +1,3 @@
-// pages/index.js
 import React, { useState, useEffect } from "react";
 import SuperheroList from "../components/SuperheroList";
 import TeamRecommendation from "../components/TeamRecommendation";
@@ -19,7 +18,7 @@ export default function Home() {
     if (!token) {
       router.push("/login"); // Redirect to login page if no token found
     }
-  }, []);
+  }, [router]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");

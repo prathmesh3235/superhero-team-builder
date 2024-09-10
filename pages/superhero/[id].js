@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import axios from "../../axios/axiosInstance";
+import Image from "next/image";
 
 export default function SuperheroDetail() {
   const router = useRouter();
@@ -14,24 +15,25 @@ export default function SuperheroDetail() {
         const response = await axios.get(`/superheroes/${id}`);
         setSuperhero(response.data);
       };
+
+      const checkFavoriteStatus = async () => {
+        try {
+          const token = localStorage.getItem("token");
+          const response = await axios.get("/favorites", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setIsFavorite(
+            response.data.some((fav) => fav.superheroId === parseInt(id))
+          );
+        } catch (error) {
+          console.error("Error checking favorite status:", error);
+        }
+      };
+
       fetchSuperhero();
       checkFavoriteStatus();
     }
   }, [id]);
-
-  const checkFavoriteStatus = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await axios.get("/favorites", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setIsFavorite(
-        response.data.some((fav) => fav.superheroId === parseInt(id))
-      );
-    } catch (error) {
-      console.error("Error checking favorite status:", error);
-    }
-  };
 
   const toggleFavorite = async () => {
     try {
@@ -71,7 +73,13 @@ export default function SuperheroDetail() {
       <p>Power: {superhero.power}</p>
       <p>Combat: {superhero.combat}</p>
       <p>Alignment: {superhero.alignment}</p>
-      {superhero.image && <img src={superhero.image} alt={superhero.name} />}
+      {superhero.image && <Image 
+        src={superhero.image} 
+        alt={superhero.name} 
+        width={400}    
+        height={400}   
+        objectFit="cover" 
+      />}
     </div>
   );
 }

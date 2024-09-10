@@ -19,7 +19,7 @@ const FavoritesList = () => {
       </h2>
       {favorites.length === 0 ? (
         <p className="text-white text-lg">
-          You haven't added any favorites yet
+          You haven`&apos;`t added any favorites yet
         </p>
       ) : (
         <AnimatePresence>
