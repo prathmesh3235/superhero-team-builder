@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "../utils/axiosInstance";
 import { motion, AnimatePresence } from "framer-motion";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
@@ -22,7 +22,7 @@ const SuperheroList = ({ isAdmin }) => {
       }
     };
     fetchSuperheroes();
-  }, []);
+  }, [selectedHero]);
 
   const handleSearch = (event) => {
     const value = event.target.value.toLowerCase();
@@ -32,6 +32,16 @@ const SuperheroList = ({ isAdmin }) => {
     setFilteredHeroes(filtered);
     setCurrentPage(1); // Reset to the first page when search changes
   };
+
+  const handleOnEdit = useCallback((editedHero) => {
+    setSelectedHero(editedHero);
+    let editedHeroList = superheroes.filter(
+      (hero) => hero.id !== editedHero.id
+    );
+    editedHeroList.push(editedHero);
+
+    setSuperheroes(editedHeroList);
+  }, []);
 
   const indexOfLastHero = currentPage * heroesPerPage;
   const indexOfFirstHero = indexOfLastHero - heroesPerPage;
@@ -100,7 +110,13 @@ const SuperheroList = ({ isAdmin }) => {
         </button>
       </div>
       {selectedHero && (
-        <Modal hero={selectedHero} onClose={closeModal} isAdmin={isAdmin} />
+        <Modal
+          key={selectedHero.id}
+          hero={selectedHero}
+          onClose={closeModal}
+          isAdmin={isAdmin}
+          onEdit={handleOnEdit}
+        />
       )}
     </div>
   );

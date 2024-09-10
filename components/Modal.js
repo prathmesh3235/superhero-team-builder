@@ -1,18 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { IoStarOutline, IoStar } from "react-icons/io5";
 import { useFavorites } from "../context/FavoritesContext";
 import axios from "../utils/axiosInstance";
 
-const Modal = ({ hero, onClose, isAdmin }) => {
+const Modal = ({ hero, onClose, isAdmin, onEdit }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [notification, setNotification] = useState("");
   const [notificationColor, setNotificationColor] = useState("");
   const { favorites, addFavorite, removeFavorite } = useFavorites();
   const isFavorite = favorites.some((fav) => fav.id === hero.id);
   const [editMode, setEditMode] = useState(false);
-  const [editedHero, setEditedHero] = useState(hero);
+  const [editedHero, setEditedHero] = useState({...hero});
 
+
+  useEffect(() => {
+    setEditedHero({ ...hero });
+  }, [hero]);
+  
   const triggerNotification = (message, color) => {
     setNotification(message);
     setNotificationColor(color);
@@ -32,6 +37,7 @@ const Modal = ({ hero, onClose, isAdmin }) => {
       triggerNotification("Failed to update favorites", "text-red-500");
     }
   };
+  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -42,20 +48,30 @@ const Modal = ({ hero, onClose, isAdmin }) => {
       [name]: numericFields.includes(name) ? parseInt(value, 10) || 0 : value
     }));
   };
+  
+  // Updated handleSave function with proper asynchronous handling and state updating
+  // const handleSave = async () => {
+  //   try {
+  //     const response = await axios.put(`/superheroes/${hero.id}`, editedHero);
+  //     triggerNotification("Superhero updated successfully", "text-green-500");
+  //     onEdit(response.data);  // assuming the server responds with the updated object
+  //     setEditMode(false);
+  //   } catch (error) {
+  //     triggerNotification("Failed to update superhero", "text-red-500");
+  //   }
+  // };
 
-
-  const handleSave = async () => {
+  const handleSave = useCallback(async () => {
     try {
-      const token = localStorage.getItem("token");
-      await axios.put(`/superheroes/${hero.id}`, editedHero, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.put(`/superheroes/${hero.id}`, editedHero);
       triggerNotification("Superhero updated successfully", "text-green-500");
+      onEdit(response.data);  // Pass the updated hero data from the server response
       setEditMode(false);
     } catch (error) {
       triggerNotification("Failed to update superhero", "text-red-500");
     }
-  };
+  }, [editedHero, hero.id, onEdit, triggerNotification]);
+  
 
   if (!hero) return null;
 
