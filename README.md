@@ -43,7 +43,7 @@ http://localhost:3000
 4. Add a `Dockerfile` to the repository if it’s not already there. You can refer to:
    https://github.com/redhat-developer-demos/next.js-openshift-example/blob/main/Containerfile
 
-5. OpenShift will detect the `Dockerrfile`. If not detected, click "Import Edit Strategy", select "Dockerfile", and provide the path.
+5. OpenShift will detect the `Dockerfile`. If not detected, click "Import Edit Strategy", select "Dockerfile", and provide the path.
 
 6. Choose a "Resource Type" (Deployment or Serverless Deployment based on preference).
 
