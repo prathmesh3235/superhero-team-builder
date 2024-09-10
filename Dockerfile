@@ -43,5 +43,9 @@ RUN npx prisma db pull
 # Start node process
 RUN npx prisma generate
 
+RUN npx migrate dev
+
+
+
 # Start node process
 CMD ["npm", "run", "start"]
