@@ -43,7 +43,7 @@ RUN npx prisma db pull
 # Start node process
 RUN npx prisma generate
 
-RUN npx migrate dev
+RUN npx prisma migrate dev
 
 
 
