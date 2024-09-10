@@ -42,7 +42,7 @@ const FavoritesList = ({ isAdmin }) => {
         </AnimatePresence>
       )}
       {selectedHero && (
-        <Modal hero={selectedHero} onClose={closeModal} isAdmin={isAdmin} />
+        <Modal hero={selectedHero} onClose={closeModal} isAdmin={isAdmin} isFromFavlist={true} />
       )}
     </div>
   );

@@ -4,20 +4,19 @@ import { IoStarOutline, IoStar } from "react-icons/io5";
 import { useFavorites } from "../context/FavoritesContext";
 import axios from "../utils/axiosInstance";
 
-const Modal = ({ hero, onClose, isAdmin, onEdit }) => {
+const Modal = ({ hero, onClose, isAdmin, onEdit, isFromFavlist }) => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [notification, setNotification] = useState("");
   const [notificationColor, setNotificationColor] = useState("");
   const { favorites, addFavorite, removeFavorite } = useFavorites();
   const isFavorite = favorites.some((fav) => fav.id === hero.id);
   const [editMode, setEditMode] = useState(false);
-  const [editedHero, setEditedHero] = useState({...hero});
-
+  const [editedHero, setEditedHero] = useState({ ...hero });
 
   useEffect(() => {
     setEditedHero({ ...hero });
   }, [hero]);
-  
+
   const triggerNotification = (message, color) => {
     setNotification(message);
     setNotificationColor(color);
@@ -37,18 +36,24 @@ const Modal = ({ hero, onClose, isAdmin, onEdit }) => {
       triggerNotification("Failed to update favorites", "text-red-500");
     }
   };
-  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    const numericFields = ['intelligence', 'strength', 'speed', 'durability', 'power', 'combat'];
-    
-    setEditedHero(prev => ({
+    const numericFields = [
+      "intelligence",
+      "strength",
+      "speed",
+      "durability",
+      "power",
+      "combat",
+    ];
+
+    setEditedHero((prev) => ({
       ...prev,
-      [name]: numericFields.includes(name) ? parseInt(value, 10) || 0 : value
+      [name]: numericFields.includes(name) ? parseInt(value, 10) || 0 : value,
     }));
   };
-  
+
   // Updated handleSave function with proper asynchronous handling and state updating
   // const handleSave = async () => {
   //   try {
@@ -65,13 +70,12 @@ const Modal = ({ hero, onClose, isAdmin, onEdit }) => {
     try {
       const response = await axios.put(`/superheroes/${hero.id}`, editedHero);
       triggerNotification("Superhero updated successfully", "text-green-500");
-      onEdit(response.data);  // Pass the updated hero data from the server response
+      onEdit(response.data); // Pass the updated hero data from the server response
       setEditMode(false);
     } catch (error) {
       triggerNotification("Failed to update superhero", "text-red-500");
     }
   }, [editedHero, hero.id, onEdit, triggerNotification]);
-  
 
   if (!hero) return null;
 
@@ -102,7 +106,7 @@ const Modal = ({ hero, onClose, isAdmin, onEdit }) => {
                 </h2>
               )}
               <div className="flex items-center">
-                {isAdmin && (
+                {isAdmin && !isFromFavlist && (
                   <button
                     onClick={() => setEditMode(!editMode)}
                     className="mr-2 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded"
@@ -121,7 +125,9 @@ const Modal = ({ hero, onClose, isAdmin, onEdit }) => {
                   </button>
                   {showTooltip && (
                     <span className="absolute -top-10 left-1/2 transform -translate-x-1/2 w-32 px-2 py-1 bg-black text-white text-xs rounded shadow-lg z-50">
-                      {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
+                      {isFavorite
+                        ? "Remove from Favorites"
+                        : "Add to Favorites"}
                     </span>
                   )}
                 </div>

@@ -28,9 +28,6 @@ RUN chown -R 1001:0 /opt/app-root/src
 # Restore default user privileges
 USER 1001
 
-# Run application in 'development' mode
-ENV NODE_ENV development
-
 # Listen on port 3000
 ENV PORT 3000
 
