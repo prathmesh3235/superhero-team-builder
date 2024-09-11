@@ -1,6 +1,6 @@
 # Superhero Team Builder
 
-A Next.js application to explore the World of SuperHeroes
+A Next.js application to explore the World of SuperHeroes and have fun with their stats.
 
 ## Prerequisites
 
@@ -10,51 +10,67 @@ A Next.js application to explore the World of SuperHeroes
 
 ### 1. Clone the Repository
 
- git clone https://github.com/prathmesh3235/superhero-team-builder.git
- 
- cd superhero-team-builder
+#### git clone https://github.com/prathmesh3235/superhero-team-builder.git
+##### cd superhero-team-builder
 
 ### 2. Build and run the application using the Docker
 
-docker build -t superhero-team-builder .
-
-docker run -p 3000:3000 superhero-team-builder
+##### docker build -t superhero-team-builder .
+##### docker run -p 3000:3000 superhero-team-builder
 
 ### 3. Access the Application 
 
 Open your browser and go to:
 http://localhost:3000
 
-Become an admin to get access to change the SuperHero Data.
-
-Use ADMIN CODE : "ADMIN" during Registeration 
-
-### 5. To Stop the application
-docker ps
-
-docker stop container-id
+### 4. Stop the application
+##### docker ps
+##### docker stop container-id
+----------------------------------------
 ----------------------------------------
 ----------------------------------------
 
 # Instructions to Deploy the Application to Red Hat OpenShift
+----------------------------------------
 
-1. Create an account and sign in to Red Hat Developer Sandbox:
-   https://developers.redhat.com/developer-sandbox
+## Initial Setup
+1. **Create an account and sign in** to Red Hat Developer Sandbox:
+   [Red Hat Developer Sandbox](https://developers.redhat.com/developer-sandbox).
 
-2. In OpenShift, go to the left-side menu and click "+Add", then select "Import from Git".
+## Deploy The Application
+2. **Navigate to Import from Git**:
+   - In OpenShift, go to the left-side menu and click "+Add".
+   - Select "From Dockerfile".
 
-3. Specify your Git repo URL. Example:
-   https://github.com/prathmesh3235/superhero-team-builder.git
+3. **Specify Git Repository URL**:
+   - Example: `https://github.com/prathmesh3235/superhero-team-builder.git`.
 
-4. Add a `Dockerfile` to the repository if it’s not already there. You can refer to:
-   https://github.com/redhat-developer-demos/next.js-openshift-example/blob/main/Containerfile
+4. **Ensure the Dockerfile is included in the repository**:
+   - You can refer to this example Dockerfile for Next.js:
+     [Next.js Example Dockerfile](https://github.com/redhat-developer-demos/next.js-openshift-example/blob/main/Containerfile).
 
-5. OpenShift will detect the `Dockerfile`. If not detected, click "Import Edit Strategy", select "Dockerfile", and provide the path.
+5. **Set Build Configuration**:
+   - OpenShift should automatically detect the `Dockerfile`. If not, click "Builder" under "Import Strategy", select "Dockerfile", and specify the path to it in the repository.
 
-6. Choose a "Resource Type" (Deployment or Serverless Deployment based on preference).
+6. **Configure Application and Component Details**:
+   - Name the application and component appropriately.
 
-7. Click "Create" and wait for the deployment to complete. You can monitor the logs in the Topology view.
+7. **Resource Configuration**:
+   - Choose "Resource Type" based on your preference (Deployment or Serverless).
 
-8. Once the deployment is finished, click the ↗ OpenURL icon to view your running Next.js app on OpenShift.
+8. **Storage for SQLite**:
+   - Go to "Advanced Options" in the setup process and add storage:
+     - Choose “Persistent Volume Claim”.
+     - Specify storage size and access mode (ReadWriteOnce).
+     - Mount path should be `/opt/app-root/src/prisma/data` where SQLite expects the database file.
 
+9. **Create and Monitor Deployment**:
+   - Click "Create".
+   - Monitor the build and deployment process in the "Topology" view.
 
+## Access and Manage Your Application
+10. **Access Your Application**:
+    - Once the deployment is finished, click the ↗ OpenURL icon to view your running Next.js app on OpenShift.
+
+## Notes
+- **Considerations for SQLite**: SQLite is a file-based database and not ideal for containerized environments like OpenShift. For production environments, consider using a more robust database system like PostgreSQL.
