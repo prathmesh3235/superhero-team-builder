@@ -33,6 +33,7 @@ Use ADMIN CODE : "ADMIN" during Registeration
 docker ps
 
 docker stop container-id
+
 ----------------------------------------
 ----------------------------------------
 
