@@ -53,10 +53,8 @@ docker stop container-id
 
 6. Choose a "Resource Type" (Deployment or Serverless Deployment based on preference).
 
-7. Under "Advanced Options", set the Target Port to `3000` for container traffic.
+7. Click "Create" and wait for the deployment to complete. You can monitor the logs in the Topology view.
 
-8. Click "Create" and wait for the deployment to complete. You can monitor the logs in the Topology view.
-
-9. Once the deployment is finished, click the ↗ OpenURL icon to view your running Next.js app on OpenShift.
+8. Once the deployment is finished, click the ↗ OpenURL icon to view your running Next.js app on OpenShift.
 
 
