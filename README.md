@@ -1,32 +1,38 @@
 # Superhero Team Builder
 
-A Next.js application to explore the World of SuperHeroes and have fun with their stats.
+An interactive web application where you can explore superheroes, create your dream teams, and engage in epic battles. Browse through a diverse list of heroes and villains, view detailed stats, and save your favorites. Use our recommendation tools to assemble balanced teams or random squads based on unique powers and alignments. Whether you're strategizing for the perfect lineup or just having fun, this app brings your superhero fantasies to life!
 
-## Prerequisites
+### Prerequisites
 
-- [Docker](https://www.docker.com/get-started) installed.
+- Make sure to have [Docker](https://www.docker.com/get-started) installed.
 
 ## Setup and Run Locally
 
 ### 1. Clone the Repository
 
-#### git clone https://github.com/prathmesh3235/superhero-team-builder.git
-##### cd superhero-team-builder
+ git clone https://github.com/prathmesh3235/superhero-team-builder.git
+ 
+ cd superhero-team-builder
 
 ### 2. Build and run the application using the Docker
 
-##### docker build -t superhero-team-builder .
-##### docker run -p 3000:3000 superhero-team-builder
+docker build -t superhero-team-builder .
+
+docker run -p 3000:3000 superhero-team-builder
 
 ### 3. Access the Application 
 
 Open your browser and go to:
 http://localhost:3000
 
-### 4. Stop the application
-##### docker ps
-##### docker stop container-id
-----------------------------------------
+Become an admin to get access to change the SuperHero Data.
+
+Use ADMIN CODE : "ADMIN" during Registeration 
+
+### 5. To Stop the application
+docker ps
+
+docker stop container-id
 ----------------------------------------
 ----------------------------------------
 
