@@ -29,7 +29,7 @@ Become an admin to get access to change the SuperHero Data.
 
 Use ADMIN CODE : "ADMIN" during Registeration 
 
-### 5. To Stop the application
+### 4. To Stop the application
 docker ps
 
 docker stop container-id
