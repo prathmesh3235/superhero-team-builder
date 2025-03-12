@@ -58,7 +58,8 @@ export default async function handler(req, res) {
       // Transform the data to match your frontend expectations
       const transformedFavorites = favorites.map(fav => ({
         ...fav.superheroId.toObject(),
-        id: fav.superheroId._id
+        id: fav.superheroId._id,
+        _id: fav.superheroId._id
       }));
       
       res.status(200).json(transformedFavorites);

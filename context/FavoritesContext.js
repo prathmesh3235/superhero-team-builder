@@ -11,20 +11,15 @@ export const FavoritesProvider = ({ children }) => {
   const fetchFavorites = async () => {
     try {
       const token = localStorage.getItem("token");
-      if (!token) return; // Don't fetch if no token exists
+      if (!token) return;
       
       const headers = { Authorization: `Bearer ${token}` };
       const response = await axios.get("/favorites", { headers });
       
-      setFavorites(
-        response.data.map((hero) => ({ 
-          ...hero, 
-          isFavorite: true,
-          // Ensure both id and _id are available for compatibility
-          id: hero.id || hero._id,
-          _id: hero._id || hero.id
-        }))
-      );
+      // Log the response to debug
+      console.log('Favorites response:', response.data);
+      
+      setFavorites(response.data);
     } catch (error) {
       console.error("Error fetching favorites:", error);
     }
