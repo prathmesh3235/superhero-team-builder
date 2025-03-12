@@ -9,7 +9,13 @@ const Modal = ({ hero, onClose, isAdmin, onEdit, isFromFavlist }) => {
   const [notification, setNotification] = useState("");
   const [notificationColor, setNotificationColor] = useState("");
   const { favorites, addFavorite, removeFavorite } = useFavorites();
-  const isFavorite = favorites.some((fav) => fav.id === hero.id);
+  
+  // Handle both _id (MongoDB) and id for compatibility
+  const heroId = hero._id || hero.id;
+  const isFavorite = favorites.some((fav) => 
+    (fav._id === heroId) || (fav.id === heroId)
+  );
+  
   const [editMode, setEditMode] = useState(false);
   const [editedHero, setEditedHero] = useState({ ...hero });
 
@@ -26,7 +32,7 @@ const Modal = ({ hero, onClose, isAdmin, onEdit, isFromFavlist }) => {
   const handleToggleFavorite = async () => {
     try {
       if (isFavorite) {
-        await removeFavorite(hero.id);
+        await removeFavorite(heroId);
         triggerNotification("Removed from Favorites", "text-red-500");
       } else {
         await addFavorite(hero);
@@ -56,14 +62,14 @@ const Modal = ({ hero, onClose, isAdmin, onEdit, isFromFavlist }) => {
 
   const handleSave = useCallback(async () => {
     try {
-      const response = await axios.put(`/superheroes/${hero.id}`, editedHero);
+      const response = await axios.put(`/superheroes/${heroId}`, editedHero);
       triggerNotification("Superhero updated successfully", "text-green-500");
       onEdit(response.data); // Pass the updated hero data from the server response
       setEditMode(false);
     } catch (error) {
       triggerNotification("Failed to update superhero", "text-red-500");
     }
-  }, [editedHero, hero.id, onEdit, triggerNotification]);
+  }, [editedHero, heroId, onEdit]);
 
   if (!hero) return null;
 
@@ -167,5 +173,3 @@ const Modal = ({ hero, onClose, isAdmin, onEdit, isFromFavlist }) => {
     </div>
   );
 };
-
-export default Modal;

@@ -1,31 +1,39 @@
-import prisma from "../../../utils/prismaClient";
-import jwt from "jsonwebtoken";
+import connectToDatabase from '../../../utils/db';
+import { Superhero } from '../../../models';
+import jwt from 'jsonwebtoken';
+import mongoose from 'mongoose';
 
-
-const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
+const JWT_SECRET = process.env.JWT_SECRET || "";
 
 export default async function handler(req, res) {
+  await connectToDatabase();
   const { id } = req.query;
+  
+  // Validate ID format for MongoDB
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "Invalid superhero ID format" });
+  }
 
   if (req.method === "GET") {
-    const superhero = await prisma.superhero.findUnique({
-      where: { id: parseInt(id) },
-    });
-    if (superhero) {
-      res.status(200).json(superhero);
-    } else {
-      res.status(404).json({ message: "Superhero not found" });
+    try {
+      const superhero = await Superhero.findById(id);
+      if (superhero) {
+        res.status(200).json(superhero);
+      } else {
+        res.status(404).json({ message: "Superhero not found" });
+      }
+    } catch (error) {
+      res.status(500).json({ message: "Error fetching superhero", error: error.toString() });
     }
   } else if (req.method === "PUT") {
     try {
       const token = req.headers.authorization?.split(" ")[1];
-      const user = jwt.decode(token);
+      const user = jwt.verify(token, JWT_SECRET);
 
       if (!user || !user.isEditor) {
         return res.status(403).json({ message: "Unauthorized" });
       }
 
-      const { id } = req.query;
       const updatedData = req.body;
 
       // Validate and convert incoming data
@@ -44,18 +52,23 @@ export default async function handler(req, res) {
 
       // Remove any undefined or NaN values
       Object.keys(validatedData).forEach(key => 
-        (validatedData[key] === undefined || isNaN(validatedData[key])) && delete validatedData[key]
+        (validatedData[key] === undefined || isNaN(validatedData[key]) && typeof validatedData[key] === 'number') && delete validatedData[key]
       );
 
-      const updatedSuperhero = await prisma.superhero.update({
-        where: { id: parseInt(id, 10) },
-        data: validatedData,
-      });
+      const updatedSuperhero = await Superhero.findByIdAndUpdate(
+        id,
+        validatedData,
+        { new: true } // Return the updated document
+      );
+
+      if (!updatedSuperhero) {
+        return res.status(404).json({ message: "Superhero not found" });
+      }
 
       res.status(200).json(updatedSuperhero);
     } catch (error) {
       console.error("Error updating superhero:", error);
-      res.status(500).json({ message: "Internal server error", error: error.message });
+      res.status(500).json({ message: "Internal server error", error: error.toString() });
     }
   } else {
     res.status(405).json({ message: "Method not allowed" });

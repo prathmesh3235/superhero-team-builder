@@ -22,9 +22,6 @@ RUN npm run build
 USER root
 RUN chown -R 1001:0 /opt/app-root/src
 
-# Create a directory for the SQLite database and set permissions
-# RUN mkdir -p /opt/app-root/src/prisma/data && chown -R 1001:0 /opt/app-root/src/prisma/data
-
 # Restore default user privileges
 USER 1001
 
@@ -33,14 +30,6 @@ ENV PORT=3000
 
 # Container exposes port 3000
 EXPOSE 3000
-
-# Start node process
-RUN npx prisma db pull
-
-# Start node process
-RUN npx prisma generate
-
-RUN npx prisma migrate dev
 
 # Start node process
 CMD ["npm", "run", "start"]

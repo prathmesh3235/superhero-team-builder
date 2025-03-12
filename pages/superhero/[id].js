@@ -12,8 +12,12 @@ export default function SuperheroDetail() {
   useEffect(() => {
     if (id) {
       const fetchSuperhero = async () => {
-        const response = await axios.get(`/superheroes/${id}`);
-        setSuperhero(response.data);
+        try {
+          const response = await axios.get(`/superheroes/${id}`);
+          setSuperhero(response.data);
+        } catch (error) {
+          console.error("Error fetching superhero:", error);
+        }
       };
 
       const checkFavoriteStatus = async () => {
@@ -23,7 +27,7 @@ export default function SuperheroDetail() {
             headers: { Authorization: `Bearer ${token}` },
           });
           setIsFavorite(
-            response.data.some((fav) => fav.superheroId === parseInt(id))
+            response.data.some((fav) => fav._id === id || fav.id === id)
           );
         } catch (error) {
           console.error("Error checking favorite status:", error);
@@ -45,7 +49,7 @@ export default function SuperheroDetail() {
       } else {
         await axios.post(
           "/favorites",
-          { superheroId: parseInt(id) },
+          { superheroId: id },
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -60,26 +64,38 @@ export default function SuperheroDetail() {
   if (!superhero) return <div>Loading...</div>;
 
   return (
-    <div>
-      <h1>{superhero.name}</h1>
-      <button onClick={toggleFavorite}>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-4">{superhero.name}</h1>
+      <button 
+        onClick={toggleFavorite}
+        className={`px-4 py-2 rounded ${isFavorite ? 'bg-red-500' : 'bg-blue-500'} text-white mb-4`}
+      >
         {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
       </button>
-      <p>Full Name: {superhero.fullName}</p>
-      <p>Intelligence: {superhero.intelligence}</p>
-      <p>Strength: {superhero.strength}</p>
-      <p>Speed: {superhero.speed}</p>
-      <p>Durability: {superhero.durability}</p>
-      <p>Power: {superhero.power}</p>
-      <p>Combat: {superhero.combat}</p>
-      <p>Alignment: {superhero.alignment}</p>
-      {superhero.image && <Image 
-        src={superhero.image} 
-        alt={superhero.name} 
-        width={400}    
-        height={400}   
-        objectFit="cover" 
-      />}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div>
+          <p className="text-lg mb-2"><span className="font-semibold">Full Name:</span> {superhero.fullName || 'Unknown'}</p>
+          <p className="text-lg mb-2"><span className="font-semibold">Intelligence:</span> {superhero.intelligence}</p>
+          <p className="text-lg mb-2"><span className="font-semibold">Strength:</span> {superhero.strength}</p>
+          <p className="text-lg mb-2"><span className="font-semibold">Speed:</span> {superhero.speed}</p>
+          <p className="text-lg mb-2"><span className="font-semibold">Durability:</span> {superhero.durability}</p>
+          <p className="text-lg mb-2"><span className="font-semibold">Power:</span> {superhero.power}</p>
+          <p className="text-lg mb-2"><span className="font-semibold">Combat:</span> {superhero.combat}</p>
+          <p className="text-lg mb-2"><span className="font-semibold">Alignment:</span> {superhero.alignment}</p>
+        </div>
+        <div>
+          {superhero.image && (
+            <Image 
+              src={superhero.image} 
+              alt={superhero.name} 
+              width={400}    
+              height={400}   
+              objectFit="cover"
+              className="rounded shadow-lg" 
+            />
+          )}
+        </div>
+      </div>
     </div>
   );
 }

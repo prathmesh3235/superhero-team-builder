@@ -15,10 +15,20 @@ const SuperheroList = ({ isAdmin }) => {
 
   useEffect(() => {
     const fetchSuperheroes = async () => {
-      const response = await axios.get("/superheroes");
-      if (response.data) {
-        setSuperheroes(response.data);
-        setFilteredHeroes(response.data);
+      try {
+        const response = await axios.get("/superheroes");
+        if (response.data) {
+          // Ensure each hero has both id and _id for compatibility
+          const processedHeroes = response.data.map(hero => ({
+            ...hero,
+            id: hero._id || hero.id,
+            _id: hero._id || hero.id
+          }));
+          setSuperheroes(processedHeroes);
+          setFilteredHeroes(processedHeroes);
+        }
+      } catch (error) {
+        console.error("Failed to fetch superheroes:", error);
       }
     };
     fetchSuperheroes();
@@ -35,13 +45,25 @@ const SuperheroList = ({ isAdmin }) => {
 
   const handleOnEdit = useCallback((editedHero) => {
     setSelectedHero(editedHero);
+    
+    // Get hero ID (handle both MongoDB _id and SQLite id for compatibility)
+    const heroId = editedHero._id || editedHero.id;
+    
+    // Filter out the old version and add the edited version
     let editedHeroList = superheroes.filter(
-      (hero) => hero.id !== editedHero.id
+      (hero) => (hero._id !== heroId && hero.id !== heroId)
     );
-    editedHeroList.push(editedHero);
-
+    
+    // Ensure the edited hero has both id and _id for compatibility
+    const processedEditedHero = {
+      ...editedHero,
+      id: heroId,
+      _id: heroId
+    };
+    
+    editedHeroList.push(processedEditedHero);
     setSuperheroes(editedHeroList);
-  }, []);
+  }, [superheroes]);
 
   const indexOfLastHero = currentPage * heroesPerPage;
   const indexOfFirstHero = indexOfLastHero - heroesPerPage;
@@ -63,7 +85,7 @@ const SuperheroList = ({ isAdmin }) => {
         <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {currentHeroes.map((hero) => (
             <motion.li
-              key={hero.id}
+              key={hero._id || hero.id}
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
@@ -111,7 +133,7 @@ const SuperheroList = ({ isAdmin }) => {
       </div>
       {selectedHero && (
         <Modal
-          key={selectedHero.id}
+          key={selectedHero._id || selectedHero.id}
           hero={selectedHero}
           onClose={closeModal}
           isAdmin={isAdmin}

@@ -11,10 +11,19 @@ export const FavoritesProvider = ({ children }) => {
   const fetchFavorites = async () => {
     try {
       const token = localStorage.getItem("token");
+      if (!token) return; // Don't fetch if no token exists
+      
       const headers = { Authorization: `Bearer ${token}` };
       const response = await axios.get("/favorites", { headers });
+      
       setFavorites(
-        response.data.map((fav) => ({ ...fav.superhero, isFavorite: true }))
+        response.data.map((hero) => ({ 
+          ...hero, 
+          isFavorite: true,
+          // Ensure both id and _id are available for compatibility
+          id: hero.id || hero._id,
+          _id: hero._id || hero.id
+        }))
       );
     } catch (error) {
       console.error("Error fetching favorites:", error);
@@ -27,12 +36,22 @@ export const FavoritesProvider = ({ children }) => {
 
   const addFavorite = async (hero) => {
     const token = localStorage.getItem("token");
+    if (!token) return;
+    
     const headers = { Authorization: `Bearer ${token}` };
+    const heroId = hero._id || hero.id;
+    
     try {
-      await axios.post("/favorites", { superheroId: hero.id }, { headers });
+      await axios.post("/favorites", { superheroId: heroId }, { headers });
       setFavorites((prevFavorites) => [
         ...prevFavorites,
-        { ...hero, isFavorite: true },
+        { 
+          ...hero, 
+          isFavorite: true,
+          // Ensure both id and _id are available for compatibility
+          id: hero.id || hero._id,
+          _id: hero._id || hero.id
+        },
       ]);
     } catch (error) {
       console.error("Error adding favorite:", error);
@@ -41,11 +60,17 @@ export const FavoritesProvider = ({ children }) => {
 
   const removeFavorite = async (heroId) => {
     const token = localStorage.getItem("token");
+    if (!token) return;
+    
     const headers = { Authorization: `Bearer ${token}` };
     try {
       await axios.delete(`/favorites?superheroId=${heroId}`, { headers });
       setFavorites((prevFavorites) =>
-        prevFavorites.filter((fav) => fav.id !== heroId)
+        prevFavorites.filter((fav) => {
+          // Filter using both id and _id for compatibility
+          const favId = fav._id || fav.id;
+          return favId !== heroId;
+        })
       );
     } catch (error) {
       console.error("Error removing favorite:", error);

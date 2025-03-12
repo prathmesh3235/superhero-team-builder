@@ -1,15 +1,20 @@
-import prisma from "../../utils/prismaClient";
-
-
+import connectToDatabase from "../../utils/db";
+import { Superhero } from "../../models";
 
 export default async function handler(req, res) {
+  await connectToDatabase();
+  
   if (req.method === "GET") {
-    const allSuperheroes = await prisma.superhero.findMany();
+    try {
+      const allSuperheroes = await Superhero.find({});
 
-    // Simple recommendation: balance of alignments and high total stats
-    const team = recommendTeam(allSuperheroes);
+      // Simple recommendation: balance of alignments and high total stats
+      const team = recommendTeam(allSuperheroes);
 
-    res.status(200).json(team);
+      res.status(200).json(team);
+    } catch (error) {
+      res.status(500).json({ message: "Error recommending team", error: error.toString() });
+    }
   } else {
     res.status(405).json({ message: "Method not allowed" });
   }

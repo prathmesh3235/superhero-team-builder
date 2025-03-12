@@ -10,3 +10,18 @@ services:
     environment:
       - NODE_ENV=development
       - JWT_SECRET=550e8400-e29b-41d4-a716-446655440000
+      - MONGODB_URI=mongodb://mongo:27017/superhero-app
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=superhero-app
+
+volumes:
+  mongo-data:
